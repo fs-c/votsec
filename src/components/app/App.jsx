@@ -16,7 +16,7 @@ import { ImplicitCallback, SecureRoute, Security } from '@okta/okta-react';
 
 import { Container } from 'semantic-ui-react';
 
-import config from './.config';
+import config from '../../.config';
 
 import Home from '../home/Home';
 import Navbar from '../navbar/Navbar';
