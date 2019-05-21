@@ -1,11 +1,14 @@
-import { withAuth } from '@okta/okta-react';
 import React, { Component } from 'react';
+import { withAuth } from '@okta/okta-react';
+
 import { Container, Menu } from 'semantic-ui-react';
-import { checkAuthentication } from './helpers';
+
+import { checkAuthentication } from '../../helpers';
 
 export default withAuth(class Navbar extends Component {
     constructor(props) {
         super(props);
+
         this.state = { authenticated: null };
 
         this.login = this.login.bind(this);

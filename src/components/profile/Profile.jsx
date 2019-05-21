@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { withAuth } from '@okta/okta-react';
+
 import { Header, Table } from 'semantic-ui-react';
 
-import { checkAuthentication } from './helpers';
+import { checkAuthentication } from '../../helpers';
 
 export default withAuth(class Profile extends Component {
     constructor(props) {
         super(props);
+
         this.state = { userinfo: null, ready: false };
+
         this.checkAuthentication = checkAuthentication.bind(this);
     }
 

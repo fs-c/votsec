@@ -13,11 +13,14 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { ImplicitCallback, SecureRoute, Security } from '@okta/okta-react';
+
 import { Container } from 'semantic-ui-react';
+
 import config from './.config';
-import Home from './Home';
-import Navbar from './Navbar';
-import Profile from './Profile';
+
+import Home from '../home/Home';
+import Navbar from '../navbar/Navbar';
+import Profile from '../profile/Profile';
 
 class App extends Component {
     render() {
