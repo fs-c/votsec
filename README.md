@@ -1,2 +1,1 @@
-# votsec
-Secure voting platform prototype
+### `votsec`
