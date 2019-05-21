@@ -1,0 +1,23 @@
+{
+    "name": "votsec-server",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@okta/jwt-verifier": "0.0.15",
+        "dotenv": "^8.0.0",
+        "koa": "^2.7.0",
+        "koa-route": "^3.2.0",
+        "mongodb": "^3.2.5"
+    },
+    "devDependencies": {
+        "@koa/cors": "^3.0.0",
+        "debug": "^4.1.1",
+        "koa-logger": "^3.2.0"
+    }
+}
