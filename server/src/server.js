@@ -7,7 +7,7 @@ const app = new (require('koa'))();
 
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 
-const config = require('../.config');
+const config = require('./.config');
 const { connect } = require('./database/database');
 
 const oktaJwtVerifier = new OktaJwtVerifier({

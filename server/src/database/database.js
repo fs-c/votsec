@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const { Vote } = require('./models');
 const { debug } = require('../server');
-const config = require('../../.config');
+const config = require('../.config');
 
 const { MONGODB_NAME, MONGODB_PASSWORD } = process.env;
 const uri = `mongodb+srv://${MONGODB_NAME}:${MONGODB_PASSWORD}@`
