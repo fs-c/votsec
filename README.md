@@ -1,4 +1,4 @@
 ### `votsec`
 
-- `src/` and `public/`: react frontend 
-- `server/`: resource server abstracting MongoDB Atlas instance
+- `app/`: react frontend 
+- `server/`: resource server
