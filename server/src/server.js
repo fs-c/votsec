@@ -5,15 +5,9 @@ const inDev = process.env.NODE_ENV !== 'production';
 const _ = require('koa-route');
 const app = new (require('koa'))();
 
-const { MongoClient } = require('mongodb');
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 
-const config = require('./.config');
-
-const { MONGODB_NAME, MONGODB_PASSWORD } = process.env;
-const uri = `mongodb+srv://${MONGODB_NAME}:${MONGODB_PASSWORD}@`
-    + config.mongoDb.connectString;
-const client = new MongoClient(uri, { useNewUrlParser: true });
+const config = require('../.config');
 
 const oktaJwtVerifier = new OktaJwtVerifier({
     clientId: config.resourceServer.oidc.clientId,
@@ -48,12 +42,6 @@ if (inDev) {
     debug = dbg('servierer');
     dbg.enable('servierer');
 }
-
-app.use(async (ctx, next) => {
-    ctx.state.votes = client.db('votsec').collection('votes');
-
-    await next();
-});
 
 app.use(_.get('/', async (ctx, next) => {
     ctx.type = 'application/json';
