@@ -8,6 +8,7 @@ const app = new (require('koa'))();
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 
 const config = require('../.config');
+const { connect } = require('./database/database');
 
 const oktaJwtVerifier = new OktaJwtVerifier({
     clientId: config.resourceServer.oidc.clientId,
@@ -25,7 +26,9 @@ const authenticationRequired = async (ctx, next) => {
     }
 
     try {
-        await oktaJwtVerifier.verifyAccessToken(match[1])
+        ctx.state.token = await oktaJwtVerifier.verifyAccessToken(match[1])
+
+        debug(ctx.state.token);
     } catch (err) {
         ctx.throw(401, 'Unauthorized');
     }
@@ -33,15 +36,17 @@ const authenticationRequired = async (ctx, next) => {
     await next();
 };
 
-let debug = () => { };
+let debug = () => {};
 if (inDev) {
     app.use(require('@koa/cors')());
     app.use(require('koa-logger')());
 
     const dbg = require('debug');
-    debug = dbg('servierer');
-    dbg.enable('servierer');
+    debug = dbg('votsec-server');
+    dbg.enable('votsec-server');
 }
+
+exports.debug = debug;
 
 app.use(_.get('/', async (ctx, next) => {
     ctx.type = 'application/json';
@@ -50,14 +55,16 @@ app.use(_.get('/', async (ctx, next) => {
     await next();
 }));
 
-app.use(_.get('/secure', authenticationRequired, async (ctx, next) => {
+app.use(_.get('/secure', authenticationRequired));
+app.use(_.get('/secure', async (ctx, next) => {
     ctx.type = 'application/json';
-    ctx.body = { message: 'This is a secured endpoint' };
+    ctx.body = { message: 'This is a secured endpoint',
+        token: ctx.state.token };
 
     await next();
 }));
 
-client.connect((err) => {
+connect((err) => {
     debug('connected to mongodb client');
 
     const { port } = config.resourceServer;
