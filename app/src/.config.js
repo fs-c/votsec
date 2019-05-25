@@ -4,5 +4,8 @@ export default {
         issuer: 'https://dev-789978.okta.com/oauth2/default',
         redirectUri: 'http://localhost:8080/implicit/callback',
         scope: 'openid profile email',
-    },
+	},
+	resourceServer: {
+		url: 'http://localhost:8000',
+	}
 };
