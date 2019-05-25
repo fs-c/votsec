@@ -11,6 +11,6 @@ module.exports = {
         }
     },
     mongoDb: {
-        connectString: 'votsec-cluster-qlzxh.mongodb.net/test?retryWrites=true'
+        connectString: 'votsec-cluster-qlzxh.mongodb.net/votsec?retryWrites=true'
     }
 };
