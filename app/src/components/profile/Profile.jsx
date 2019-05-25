@@ -9,7 +9,7 @@ export default withAuth(class Profile extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { userinfo: null, ready: false };
+        this.state = { user: null, ready: false };
 
         this.checkAuthentication = checkAuthentication.bind(this);
     }
@@ -25,8 +25,8 @@ export default withAuth(class Profile extends Component {
     }
 
     async applyClaims() {
-        if (this.state.userinfo && !this.state.claims) {
-            const claims = Object.entries(this.state.userinfo);
+        if (this.state.user && !this.state.claims) {
+            const claims = Object.entries(this.state.user);
             this.setState({ claims, ready: true });
         }
     }
