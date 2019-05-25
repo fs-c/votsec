@@ -39,17 +39,15 @@ export default withAuth(class Navbar extends Component {
         ] : [ <Menu.Item key="login" as="a" onClick={this.login}>Login</Menu.Item> ];
 
         return (
-            <div>
-                <Menu fixed="top" inverted>
-                    <Container>
-                        <Menu.Item as="a" header href="/">
-                            <i>vot</i>sec
-                        </Menu.Item>
+			<Menu fixed="top" inverted>
+				<Container>
+					<Menu.Item as="a" header href="/">
+						<i>vot</i>sec
+					</Menu.Item>
 
-                        {menuItems}
-                    </Container>
-                </Menu>
-            </div>
+					{menuItems}
+				</Container>
+			</Menu>
         );
     }
 });
