@@ -5,10 +5,12 @@ const inDev = process.env.NODE_ENV !== 'production';
 const _ = require('koa-route');
 const app = new (require('koa'))();
 
+const debug = require('debug')('server');
+
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 
 const config = require('./.config');
-const { connect } = require('./database/database');
+const { connect, votes } = require('./database/database');
 
 const oktaJwtVerifier = new OktaJwtVerifier({
     clientId: config.resourceServer.oidc.clientId,
@@ -27,8 +29,6 @@ const authenticationRequired = async (ctx, next) => {
 
     try {
         ctx.state.token = await oktaJwtVerifier.verifyAccessToken(match[1])
-
-        debug(ctx.state.token);
     } catch (err) {
         ctx.throw(401, 'Unauthorized');
     }
@@ -36,20 +36,28 @@ const authenticationRequired = async (ctx, next) => {
     await next();
 };
 
-let debug = () => {};
 if (inDev) {
     app.use(require('@koa/cors')());
     app.use(require('koa-logger')());
-
-    const dbg = require('debug');
-    debug = dbg('votsec-server');
-    dbg.enable('votsec-server');
 }
 
-exports.debug = debug;
+app.use(require('koa-bodyparser')());
+
+app.use(async (ctx, next) => {
+	ctx.type = 'application/json';
+
+	try {
+		await next();
+	} catch (err) {
+		ctx.status = ctx.status || 500;
+
+		if (inDev) {
+			ctx.body = err;
+		}
+	}
+});
 
 app.use(_.get('/', async (ctx, next) => {
-    ctx.type = 'application/json';
     ctx.body = { message: 'Hello there' };
 
     await next();
@@ -57,18 +65,43 @@ app.use(_.get('/', async (ctx, next) => {
 
 app.use(_.get('/secure', authenticationRequired));
 app.use(_.get('/secure', async (ctx, next) => {
-    ctx.type = 'application/json';
     ctx.body = { message: 'This is a secured endpoint',
         token: ctx.state.token };
 
     await next();
 }));
 
-connect((err) => {
-    debug('connected to mongodb client');
+app.use(_.get('/votes/get', async (ctx, next) => {
+	const fetched = await votes.get();
 
-    const { port } = config.resourceServer;
-    app.listen(port, () => {
-        debug('server listening on port %o', port);
-    });
+	ctx.body = fetched;
+
+	await next();
+}));
+
+app.use(_.post('/votes/add', authenticationRequired));
+app.use(_.post('/votes/add', async (ctx, next) => {
+	debug('y0');
+
+	try {
+		const status = await votes.add(ctx.request.body);
+	} catch (err) {
+		debug(err);
+	}
+
+	debug('y1');
+
+	ctx.status = 200;
+	ctx.body = status;
+}));
+
+(async () => {
+
+await connect();
+
+const { port } = config.resourceServer;
+app.listen(port, () => {
+	debug('server listening on port %o', port);
 });
+
+})();
