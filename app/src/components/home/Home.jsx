@@ -30,21 +30,14 @@ export default withAuth(class Home extends Component {
 
     render() {
         if (this.state.authenticated === null)
-            return <div></div>;
+            return <React.Fragment></React.Fragment>;
         
         return (
-            <div>
-                {this.state.authenticated ? (
-					<div>
-						<p>Welcome back, {this.state.user.email}!</p>
+			<React.Fragment>
+                {this.state.authenticated && <AddNewVote />}
 
-						<AddNewVote />
-						<VoteList />
-					</div>
-				) : (
-					<VoteList />
-				)}
-            </div>
+				<VoteList />
+			</React.Fragment>
 		);
     }
 });
