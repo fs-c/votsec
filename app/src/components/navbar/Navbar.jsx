@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withAuth } from '@okta/okta-react';
 
-import { Container, Menu, Button } from 'semantic-ui-react';
+import { Container, Menu } from 'semantic-ui-react';
 
 import { checkAuthentication } from '../../helpers';
 
