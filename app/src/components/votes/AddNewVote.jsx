@@ -12,7 +12,7 @@ export default withAuth(class AddNewVote extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = { error: null, loading: false };
+		this.state = { error: null, loading: false, success: false };
 
 		this.checkAuthentication = checkAuthentication.bind(this);
 	}
@@ -33,6 +33,8 @@ export default withAuth(class AddNewVote extends Component {
 				hidden: this.state.voteHidden,
 			}, { headers: { Authorization: `Bearer ${accessToken}` } });
 
+			this.setState({ success: true });
+
 			console.log('added new vote');
 		} catch (err) {
 			console.error('submitVote', err);
@@ -51,8 +53,11 @@ export default withAuth(class AddNewVote extends Component {
 				</Card.Content>
 
 				<Card.Content>
-					<AddVoteForm error={this.state.error}
-						loading={this.state.loading} addNewVote={this.addNewVote}
+					<AddVoteForm
+						error={this.state.error}
+						success={this.state.success}
+						loading={this.state.loading}
+						addNewVote={this.addNewVote}
 					/>
 				</Card.Content>
 			</Card>
@@ -82,19 +87,16 @@ class AddVoteForm extends Component {
 		this.setState((prevState) => ({ voteHidden: !prevState.voteHidden }));
 	}
 
-	// TODO: This shouldn't mutate the error state
-	handleMessageDismiss = () => {
-		this.setState({ error: null });
-	}
-
 	render() {
 		return (
-			<Form error={this.props.error !== null} loading={this.props.loading}
+			<Form error={this.props.error !== null}
+				loading={this.props.loading}
+				success={this.props.success}
 				onSubmit={this.props.addNewVote}
 			>
-				<Message error content={this.props.error}
-					onDismiss={this.handleMessageDismiss}
-				/>
+				<Message error content={this.props.error} />
+
+				<Message success content='Added vote successfully' />
 
 				<Form.Field>
 					<label>Title</label>
