@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { withAuth } from '@okta/okta-react';
 
+import { Divider } from 'semantic-ui-react';
+
 import VoteList from '../votes/VoteList';
 import AddNewVote from '../votes/AddNewVote';
 
@@ -34,7 +36,10 @@ export default withAuth(class Home extends Component {
         
         return (
 			<React.Fragment>
-                {this.state.authenticated && <AddNewVote />}
+                {this.state.authenticated && <React.Fragment>
+					<AddNewVote />
+					<Divider hidden />
+				</React.Fragment>}
 
 				<VoteList />
 			</React.Fragment>
