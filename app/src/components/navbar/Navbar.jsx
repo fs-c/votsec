@@ -30,17 +30,16 @@ export default withAuth(class Navbar extends Component {
 
     async logout() {
         this.props.auth.logout('/');
-    }
+	}
 
     render() {
         return (
 			<Menu fixed='top' size='large' inverted><Container>
-				<Menu.Item as="a" header href="/">
-					<i>vot</i>sec
-				</Menu.Item>
+				<Menu.Item name='votsec' content='votsec' header href="/" />
 
 				{this.state.authenticated === true &&
-					<Menu.Item name='profile' href='/profile' />}
+					<Menu.Item name='profile' href='/profile' />
+				}
 
 				<Menu.Menu position='right'>
 					{this.state.authenticated === true ? (
