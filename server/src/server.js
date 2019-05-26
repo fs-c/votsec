@@ -81,15 +81,11 @@ app.use(_.get('/votes/get', async (ctx, next) => {
 
 app.use(_.post('/votes/add', authenticationRequired));
 app.use(_.post('/votes/add', async (ctx, next) => {
-	debug('y0');
-
 	try {
 		const status = await votes.add(ctx.request.body);
 	} catch (err) {
 		debug(err);
 	}
-
-	debug('y1');
 
 	ctx.status = 200;
 	ctx.body = status;
