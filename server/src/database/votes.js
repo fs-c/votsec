@@ -41,7 +41,7 @@ const addVote = exports.add = async (v) => {
 const getVotes = exports.get = async () => {
 	debug('getting votes');
 
-	const votes = await Vote.find();
+	const votes = await Vote.find({ hidden: false });
 
 	debug('found %o votes', votes.length);
 
