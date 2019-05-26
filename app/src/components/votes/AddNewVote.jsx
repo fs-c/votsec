@@ -3,7 +3,7 @@ import { withAuth } from '@okta/okta-react';
 
 import axios from 'axios';
 
-import { Form, Checkbox, Button } from 'semantic-ui-react'
+import { Form, Checkbox, Button, Message, Card } from 'semantic-ui-react'
 
 import config from '../../.config';
 import { checkAuthentication } from '../../helpers';
@@ -12,12 +12,61 @@ export default withAuth(class AddNewVote extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {
-			submitting: false, error: null,
-			voteTitle: '', voteDescription: '', voteHidden: false,
-		};
+		this.state = { error: null, loading: false };
 
 		this.checkAuthentication = checkAuthentication.bind(this);
+	}
+
+	addNewVote = async () => {
+		this.checkAuthentication();
+
+		console.log('adding new vote');
+
+		this.setState({ loading: true });
+
+		try {
+			const accessToken = await this.props.auth.getAccessToken();
+
+			await axios.post(config.resourceServer.url + '/votes/add', {
+				title: this.state.voteTitle,
+				description: this.state.voteDescription,
+				hidden: this.state.voteHidden,
+			}, { headers: { Authorization: `Bearer ${accessToken}` } });
+
+			console.log('added new vote');
+		} catch (err) {
+			console.error('submitVote', err);
+
+			this.setState({ error: err.message });
+		} finally {
+			this.setState({ loading: false });
+		}
+	}
+
+	render() {
+		return (
+			<Card fluid>
+				<Card.Content>
+					<Card.Header>Add Vote</Card.Header>
+				</Card.Content>
+
+				<Card.Content>
+					<AddVoteForm error={this.state.error}
+						loading={this.state.loading} addNewVote={this.addNewVote}
+					/>
+				</Card.Content>
+			</Card>
+		);
+	}
+});
+
+class AddVoteForm extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			voteTitle: '', voteDescription: '', voteHidden: false,
+		};
 	}
 
 	handleInputChange = (event) => {
@@ -28,37 +77,25 @@ export default withAuth(class AddNewVote extends Component {
 		});
 	}
 
+	// TODO: Implement generic handler
 	handleCheckboxToggle = () => {
 		this.setState((prevState) => ({ voteHidden: !prevState.voteHidden }));
 	}
 
-	addNewVote = async () => {
-		this.checkAuthentication();
-
-		this.setState({ submitting: true });
-
-		try {
-			const accessToken = await this.props.auth.getAccessToken();
-
-			console.log(accessToken);
-
-			await axios.post(config.resourceServer.url + '/votes/add', {
-				title: this.state.voteTitle,
-				description: this.state.voteDescription,
-				hidden: this.state.voteHidden,
-			}, { headers: { Authorization: `Bearer ${accessToken}` } });
-		} catch (err) {
-			console.error('submitVote', err);
-
-			this.setState({ error: err.message });
-		} finally {
-			this.setState({ submitting: false });
-		}
+	// TODO: This shouldn't mutate the error state
+	handleMessageDismiss = () => {
+		this.setState({ error: null });
 	}
 
 	render() {
 		return (
-			<Form onSubmit={this.submitVote}>
+			<Form error={this.props.error !== null} loading={this.props.loading}
+				onSubmit={this.props.addNewVote}
+			>
+				<Message error content={this.props.error}
+					onDismiss={this.handleMessageDismiss}
+				/>
+
 				<Form.Field>
 					<label>Title</label>
 					<input placeholder='Short and descriptive vote title'
@@ -73,14 +110,16 @@ export default withAuth(class AddNewVote extends Component {
 						onChange={this.handleInputChange} />
 				</Form.Field>
 
-				<Form.Field>
+				<Form.Field width={14}>
 					<Checkbox label='Hide vote' name='voteHidden'
 						checked={this.state.voteHidden}
 						onChange={this.handleCheckboxToggle} />
 				</Form.Field>
-
-				<Button type='submit' primary>Add vote</Button>
+				
+				<Form.Field>
+					<Button type='submit'>Add vote</Button>
+				</Form.Field>
 			</Form>
 		);
 	}
-});
+}
