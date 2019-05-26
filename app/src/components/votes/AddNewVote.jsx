@@ -3,7 +3,7 @@ import { withAuth } from '@okta/okta-react';
 
 import axios from 'axios';
 
-import { Form, Checkbox, Button, Message, Card } from 'semantic-ui-react'
+import { Form, Checkbox, Button, Message, Card, TextArea } from 'semantic-ui-react'
 
 import config from '../../.config';
 import { checkAuthentication } from '../../helpers';
@@ -107,7 +107,7 @@ class AddVoteForm extends Component {
 
 				<Form.Field>
 					<label>Description</label>
-					<input placeholder='A more detailed description of the vote'
+					<TextArea placeholder='A more detailed description of the vote'
 						name='voteDescription' value={this.state.voteDescription}
 						onChange={this.handleInputChange} />
 				</Form.Field>
