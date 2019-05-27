@@ -95,7 +95,7 @@ app.use(_.post('/votes/add', async (ctx, next) => {
 
 await connect();
 
-const { port } = config.resourceServer;
+const port = process.env.PORT || config.resourceServer.port || 8000;
 app.listen(port, () => {
 	debug('server listening on port %o', port);
 });
