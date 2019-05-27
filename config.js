@@ -5,17 +5,19 @@ const openID = {
 	scope: 'openid profile email groups',
 };
 
+const resourceServer = {
+	port: 8090,
+	url: 'http://localhost',
+	mongoDB: {
+		connectString: 'votsec-cluster-qlzxh.mongodb.net/votsec?retryWrites=true',
+	},
+	assertClaims: {
+		aud: 'api://default',
+		cid: openID.client,
+	},
+};
+
 module.exports = {
 	openID,
-	resourceServer: {
-		port: 8090,
-		url: "http://localhost",
-		mongoDB: {
-			connectString: "votsec-cluster-qlzxh.mongodb.net/votsec?retryWrites=true",
-		},
-		assertClaims: {
-			aud: "api://default",
-			cid: openID.client,
-		}
-	}
-}
+	resourceServer,
+};
