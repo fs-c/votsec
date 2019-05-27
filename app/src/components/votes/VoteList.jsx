@@ -4,7 +4,7 @@ import moment from 'moment';
 
 import { Item, Message } from 'semantic-ui-react';
 
-import config from '../../.config';
+import { config } from '../app/App';
 
 export default class VoteList extends Component {
 	constructor(props) {
@@ -26,7 +26,8 @@ export default class VoteList extends Component {
 	}
 
 	async getVotes() {
-		const res = await axios.get(config.resourceServer.url + '/votes/get');
+		const { url, port } = config.resourceServer;
+		const res = await axios.get(`${url}:${port}/votes/get`);
 
 		if (res.status !== 200) {
 			return this.setState({ error: 'Failed getting votes: ' + res.statusText });

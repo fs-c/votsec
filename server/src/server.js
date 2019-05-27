@@ -2,6 +2,9 @@ require('dotenv').config();
 
 const inDev = process.env.NODE_ENV !== 'production';
 
+const config = require('../../config.js');
+exports.config = config;
+
 const _ = require('koa-route');
 const app = new (require('koa'))();
 
@@ -9,14 +12,12 @@ const debug = require('debug')('server');
 
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 
-const config = require('./.config');
 const { connect, votes } = require('./database/database');
 
 const oktaJwtVerifier = new OktaJwtVerifier({
-    clientId: config.resourceServer.oidc.clientId,
-    issuer: config.resourceServer.oidc.issuer,
-    assertClaims: config.resourceServer.assertClaims,
-    testing: config.resourceServer.oidc.testing
+    clientId: config.openID.client,
+    issuer: config.openID.issuer,
+    assertClaims: config.resourceServer.assertClaims
 });
 
 const authenticationRequired = async (ctx, next) => {

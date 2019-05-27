@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import { Form, Checkbox, Button, Message, Card, TextArea } from 'semantic-ui-react'
 
-import config from '../../.config';
+import { config } from '../app/App';
 import { checkAuthentication } from '../../helpers';
 
 export default withAuth(class AddNewVote extends Component {
@@ -27,7 +27,8 @@ export default withAuth(class AddNewVote extends Component {
 		try {
 			const accessToken = await this.props.auth.getAccessToken();
 
-			await axios.post(config.resourceServer.url + '/votes/add', {
+			const { url, port } = config.resourceServer;
+			await axios.post(`${url}:${port}/votes/add`, {
 				title: this.state.voteTitle,
 				description: this.state.voteDescription,
 				hidden: this.state.voteHidden,
