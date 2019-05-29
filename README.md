@@ -18,6 +18,10 @@ Optionally [git](https://git-scm.com/) to clone the repository to your computer.
 
 ### Configuration
 
+```
+$ cp config.example.js config.js
+```
+
 The main configuration takes place in `config.js`, which is used by both the frontend and server. Since it's JS you can put just about anything in there, but it must export an `Object` with the following _required_ fields.
 
 ```js
