@@ -21,7 +21,7 @@ export default withAuth(class Profile extends Component {
 
     async componentDidUpdate() {
         await this.checkAuthentication();
-        this.applyClaims();
+		this.applyClaims();
     }
 
     async applyClaims() {
@@ -56,7 +56,7 @@ export default withAuth(class Profile extends Component {
                                 const claimId = `claim-${claimName}`;
                                 return <tr key={claimName}>
                                     <td>{claimName}</td>
-                                    <td id={claimId}>{claimValue}</td>
+                                    <td id={claimId}>{claimValue.toString()}</td>
                                 </tr>;
                             })}
                         </tbody>
