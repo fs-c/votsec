@@ -12,7 +12,7 @@ $ git clone https://github.com/LW2904/votsec.git
 
 - [NodeJS](https://nodejs.org/en/) >= 8.9, preferably the latest LTS
 - A running [MongoDB](https://www.mongodb.com/what-is-mongodb) server (the example uses [MongoDB Atlas](https://www.mongodb.com/cloud/atlas))
-- An active [Okta](https://www.okta.com/) Application (requires a free account)
+- An active [Okta](https://developer.okta.com/) Application (requires a free developer account)
 
 Optionally [git](https://git-scm.com/) to clone the repository to your computer.
 
@@ -51,4 +51,4 @@ module.exports = {
 
 ```
 
-Additionally, the resource server requires you to pass the `MONGODB_NAME` and `MONGODB_PASSWORD` environment variables. (I personally recommend using a `.env` file `server/`)
+Additionally, the resource server requires you to pass the `MONGODB_NAME` and `MONGODB_PASSWORD` environment variables. (I personally recommend using a `.env` file in `server/`)
