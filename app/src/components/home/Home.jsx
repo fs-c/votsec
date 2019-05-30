@@ -12,9 +12,8 @@ export default withAuth(class Home extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { authenticated: null, user: null };
+        this.state = { authenticated: null, user: null, isAdmin: false };
 
-        this.login = this.login.bind(this);
         this.checkAuthentication = checkAuthentication.bind(this);
     }
 
@@ -25,18 +24,14 @@ export default withAuth(class Home extends Component {
     async componentDidUpdate() {
         this.checkAuthentication();
     }
-
-    async login() {
-        this.props.auth.login('/');
-    }
-
+	
     render() {
         if (this.state.authenticated === null)
             return <React.Fragment></React.Fragment>;
-        
+
         return (
 			<React.Fragment>
-                {this.state.authenticated && <React.Fragment>
+                {this.state.authenticated && this.state.isAdmin && <React.Fragment>
 					<AddNewVote />
 					<Divider hidden />
 				</React.Fragment>}
