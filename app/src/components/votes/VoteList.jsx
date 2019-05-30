@@ -70,15 +70,6 @@ class VoteItem extends Component {
 		const endDate = moment(this.vote.endDate).fromNow();
 
 		return (
-			// <List.Item>
-			// 	<List.Content>
-			// 		<List.Header>{this.props.vote.title}</List.Header>
-			// 		<List.Description>{this.props.vote.description}</List.Description>
-			// 	</List.Content>
-			// </List.Item>
-
-			// <List.Item header={this.props.vote.title} description={this.props.vote.description} />
-
 			<Item>
 				<Item.Content>
 					<Item.Header as='a'>{this.vote.title}</Item.Header>
