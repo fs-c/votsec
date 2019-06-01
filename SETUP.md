@@ -36,7 +36,7 @@ Sign up for a free [MongoDB Atlas](https://www.mongodb.com/download-center/cloud
 After your DB instance has spun up,
 
 - In the Clusters tab, select your cluster and navigate to the Collections tab. Create a database called `votsec` with a collection `votes`.
-- Add a new user in the Database Access tab. It will need read and write access to the `votsec` database, although for now it'll do to give it r&w access to all databases.
+- Add a new user in the Database Access tab. It will need read and write access to the `votsec` database, although for now it'll do to give it said access to all databases.
 - Allow access from all IPs by going to the Network Access tab and choosing 'Allow access from anywhere'. __This is only for development__, make sure to narrow it down to the IP(s) of your server(s) once you're up and running.
 
 Once you're all set, fetch your connection string by clicking the 'Connect' button of your cluster in the Clusters tab, and choosing 'Connect Your Application' (at the time of writing, the default values of 'Node.js' and 'version 3.0 or later' are appropiate). You'll want to insert said string into `config.js` under `resourceServer.mongoDB.connectionString`.
@@ -86,6 +86,6 @@ Once you're in the Classic UI,
 - Fetch the last two required `config.js` values, `openID.client` and `openID.redirect` from the Applications menu, by selecting your application and navigating to the General tab.
 - Allow all groups to be passed through the ID token by navigating to the Sign On tab of the same page and selecting 'Edit' in the 'OpenID Connect ID Token' section. You'll want to set the Groups claim filter to 'Matches regex', with the already familiar `.*` expression.
 
-3. Setup the frontend and backend
+3. __Setup the frontend and backend__
 
 Please refer to the READMEs found in the `app/` and `server/` directories for instructions and information.
