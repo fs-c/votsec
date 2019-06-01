@@ -16,6 +16,10 @@ $ git clone https://github.com/LW2904/votsec.git
 
 Optionally [git](https://git-scm.com/) to clone the repository to your computer.
 
+### Setup
+
+For detailed setup instructions refer to `SETUP.md`. If all this feels familiar to you, feel free to skip right to the Configuration section.
+
 ### Configuration
 
 ```
