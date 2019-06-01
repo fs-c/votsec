@@ -31,7 +31,7 @@ $ cp config.example.js config.js
 
 Any MongoDB (version 4.0 preferred) instance will do, but the following will outline the creation of a free MongoDB Atlas instance.
 
-Create a free MongoDB Atlas account [here](https://www.mongodb.com/download-center/cloud), and follow the instructions to create a cluster. The free tier will only allows you to customise the region and name of your to-be cluster, both of which are up to you.
+Create a free MongoDB Atlas account [here](https://www.mongodb.com/download-center/cloud), and follow the instructions to create a cluster. The free tier will only allow you to customise the region and name of your to-be cluster, both of which are up to you.
 
 After your DB instance has spun up,
 
@@ -66,7 +66,7 @@ Once you're in the Developer Console,
 Now that your application is created, you'll want to switch from the Developer Console to the Classic UI via the selector in the top left. Once you're in the Classic UI,
 
 - Applications > `Your Application`
-	- from the General tab, get your redirect URI and Client ID and and insert them into into `openID.client` and `openID.redirect` respectively in `config.js`.
+	- from the General tab, get your redirect URI and Client ID and and insert them into `openID.client` and `openID.redirect` respectively in `config.js`.
 	- in the Sign On tab, navigate to OpenID Connect ID Token and select Edit. Set the groups claim filter to 'Matches regex' and insert `.*`.
 
 3. __Setup the backend__
@@ -78,7 +78,7 @@ $ npm install
 # Run the server
 $ node src/server.js
 
-# Optionally, to run in debugging move, do
+# Optionally, to run in debugging mode, do
 $ DEBUG=server,database:* node src/server.js
 # to enable debug logging for the server and all database related modules
 ```
@@ -103,7 +103,7 @@ $ npm run build
 
 You could now host the files in the `build/` directory using a regular Web server (like nginx), but for simplicitiy's sake this won't be outlined in more detail here. 
 
-In order to cover the most basic use case, starting a developemnt server, simply do
+In order to cover the most basic use case, starting a development server, simply do
 
 ```bash
 # Start the dev-server
