@@ -12,7 +12,8 @@ export default withAuth(class AddNewVote extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = { error: null, loading: false, success: false };
+		this.state = { error: null, loading: false, success: false,
+			voteTitle: '', voteDescription: '', voteHidden: false };
 
 		this.checkAuthentication = checkAuthentication.bind(this);
 	}
@@ -20,7 +21,7 @@ export default withAuth(class AddNewVote extends Component {
 	addNewVote = async () => {
 		this.checkAuthentication();
 
-		console.log('adding new vote');
+		console.log('adding new vote', this.state);
 
 		this.setState({ loading: true });
 
@@ -46,35 +47,6 @@ export default withAuth(class AddNewVote extends Component {
 		}
 	}
 
-	render() {
-		return (
-			<Card fluid>
-				<Card.Content>
-					<Card.Header>Add Vote</Card.Header>
-				</Card.Content>
-
-				<Card.Content>
-					<AddVoteForm
-						error={this.state.error}
-						success={this.state.success}
-						loading={this.state.loading}
-						addNewVote={this.addNewVote}
-					/>
-				</Card.Content>
-			</Card>
-		);
-	}
-});
-
-class AddVoteForm extends Component {
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			voteTitle: '', voteDescription: '', voteHidden: false,
-		};
-	}
-
 	handleInputChange = (event) => {
 		const name = event.target.name;
 
@@ -90,6 +62,31 @@ class AddVoteForm extends Component {
 
 	render() {
 		return (
+			<Card fluid>
+				<Card.Content>
+					<Card.Header>Add Vote</Card.Header>
+				</Card.Content>
+
+				<Card.Content>
+					<AddVoteForm
+						error={this.state.error}
+						success={this.state.success}
+						loading={this.state.loading}
+						voteTitle={this.state.voteTitle}
+						voteDescription={this.state.voteDescription}
+						addNewVote={this.addNewVote}
+						handleInputChange={this.handleInputChange}
+						handleCheckboxToggle={this.handleCheckboxToggle}
+					/>
+				</Card.Content>
+			</Card>
+		);
+	}
+});
+
+class AddVoteForm extends Component {
+	render() {
+		return (
 			<Form error={this.props.error !== null}
 				loading={this.props.loading}
 				success={this.props.success}
@@ -102,23 +99,23 @@ class AddVoteForm extends Component {
 				<Form.Field>
 					<label>Title</label>
 					<input placeholder='Short and descriptive vote title'
-						name='voteTitle' value={this.state.voteTitle}
-						onChange={this.handleInputChange} />
+						name='voteTitle' value={this.props.voteTitle}
+						onChange={this.props.handleInputChange} />
 				</Form.Field>
 
 				<Form.Field>
 					<label>Description</label>
 					<TextArea placeholder='A more detailed description of the vote'
-						name='voteDescription' value={this.state.voteDescription}
-						onChange={this.handleInputChange} />
+						name='voteDescription' value={this.props.voteDescription}
+						onChange={this.props.handleInputChange} />
 				</Form.Field>
 
 				<Form.Field width={14}>
 					<Checkbox label='Hide vote' name='voteHidden'
-						checked={this.state.voteHidden}
-						onChange={this.handleCheckboxToggle} />
+						checked={this.props.voteHidden}
+						onChange={this.props.handleCheckboxToggle} />
 				</Form.Field>
-				
+
 				<Form.Field>
 					<Button type='submit'>Add vote</Button>
 				</Form.Field>
