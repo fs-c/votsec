@@ -80,6 +80,11 @@ try {
 app.use(router.routes());
 app.use(router.allowedMethods());
 
+const prefix = process.env.PREFIX || false;
+if (prefix) {
+	router.prefix(prefix);
+}
+
 const port = process.env.PORT || config.resourceServer.port || 8000;
 app.listen(port, () => {
 	debug('server listening on port %o', port);
