@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 
 import App from './components/app/App';
 
-import registerServiceWorker from './registerServiceWorker';
+// TODO: Should probably reenable this in the future, unnecessary for now
+// import registerServiceWorker from './registerServiceWorker';
 
 import 'semantic-ui-css/semantic.min.css';
 
