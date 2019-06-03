@@ -7,6 +7,7 @@ exports.config = config;
 
 const _ = require('koa-route');
 const app = new (require('koa'))();
+const router = new (require('koa-router'))();
 
 const debug = require('debug')('server');
 
@@ -14,27 +15,52 @@ const OktaJwtVerifier = require('@okta/jwt-verifier');
 
 const { connect, votes } = require('./database/database');
 
-const oktaJwtVerifier = new OktaJwtVerifier({
-    clientId: config.openID.client,
-    issuer: config.openID.issuer,
-    assertClaims: config.resourceServer.assertClaims
-});
+const authRequired = (requiredGroup) => {
+	const verifier = new OktaJwtVerifier({
+		clientId: config.openID.client,
+		issuer: config.openID.issuer,
+		assertClaims: config.resourceServer.assertClaims,
+	});
 
-const authenticationRequired = async (ctx, next) => {
-    const authHeader = ctx.headers.authorization || '';
-    const match = authHeader.match(/Bearer (.+)/);
+	return async (ctx, next) => {
+		debug('entering authRequired');
 
-    if (!match) {
-        ctx.throw(401, 'Unauthorized');
-    }
+		const authHeader = ctx.headers.authorization || '';
+		const match = authHeader.match(/Bearer (.+)/);
 
-    try {
-        ctx.state.token = await oktaJwtVerifier.verifyAccessToken(match[1])
-    } catch (err) {
-        ctx.throw(401, 'Unauthorized');
-    }
+		debug('fetched bearer token')
 
-    await next();
+		if (!match || !match[1]) {
+			debug(authHeader, 'token not found');
+	
+			ctx.throw(401, 'No token provided');
+		}
+
+		try {
+			debug('verifying token');
+
+			ctx.state.token = await verifier.verifyAccessToken(match[1]);
+
+			const { grp } = ctx.state.token.claims;
+
+			if (!grp && requiredGroup) {
+				debug('groups are required but no groups field in token');
+
+				ctx.throw(401, 'Token error');
+			}
+
+			if (!grp.includes(requiredGroup)) {
+				debug('required group %o is not in groups %o', requiredGroup,
+					grp);
+				
+				ctx.throw(401, 'Insufficient permissions');
+			}
+		} catch (err) {
+			ctx.throw(401, 'Unauthorized', err);
+		}
+
+		await next();
+	};
 };
 
 if (inDev) {
@@ -42,59 +68,66 @@ if (inDev) {
     app.use(require('koa-logger')());
 }
 
-app.use(require('koa-bodyparser')());
+router.use(require('koa-bodyparser')());
 
-app.use(async (ctx, next) => {
+router.use(async (ctx, next) => {
 	ctx.type = 'application/json';
 
 	try {
 		await next();
 	} catch (err) {
-		ctx.status = ctx.status || 500;
+		debug(err, 'catched error');
+
+		ctx.status = err.statusCode || err.status || 500;
 
 		if (inDev) {
-			ctx.body = err;
+			ctx.body = { err };
 		}
 	}
 });
 
-app.use(_.get('/', async (ctx, next) => {
+router.get('/', async (ctx, next) => {
     ctx.body = { message: 'Hello there' };
 
     await next();
-}));
+});
 
-app.use(_.get('/secure', authenticationRequired));
-app.use(_.get('/secure', async (ctx, next) => {
-    ctx.body = { message: 'This is a secured endpoint',
+router.get('/secure', authRequired(), async (ctx, next) => {
+	ctx.body = { message: 'This is a secured endpoint',
         token: ctx.state.token };
 
     await next();
-}));
+});
 
-app.use(_.get('/votes/get', async (ctx, next) => {
+router.get('/votes/get', async (ctx, next) => {
 	const fetched = await votes.get();
 
 	ctx.body = fetched;
 
 	await next();
-}));
+});
 
-app.use(_.post('/votes/add', authenticationRequired));
-app.use(_.post('/votes/add', async (ctx, next) => {
-	try {
-		const status = await votes.add(ctx.request.body);
-	} catch (err) {
-		debug(err);
-	}
+router.post('/votes/add', authRequired('Admin'), async (ctx, next) => {
+	debug(ctx.request.body, 'adding a vote');
+
+	ctx.body = await votes.add(ctx.request.body);
 
 	ctx.status = 200;
-	ctx.body = status;
-}));
+});
 
 (async () => {
 
-await connect();
+try {
+	await connect();
+} catch (err) {
+	console.error('failed connecting to the database: ', err.message);
+	debug(err);
+
+	return;
+}
+
+app.use(router.routes());
+app.use(router.allowedMethods());
 
 const port = process.env.PORT || config.resourceServer.port || 8000;
 app.listen(port, () => {
