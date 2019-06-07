@@ -1,3 +1,4 @@
+const debug = require('debug')('auth');
 const { config } = require('./server');
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 
