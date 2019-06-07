@@ -12,7 +12,7 @@ const router = new (require('koa-router'))();
 const debug = require('debug')('server');
 
 const { authRequired } = require('./auth');
-const { connect, votes } = require('./database/database');
+const { connect, votes } = require('./database');
 
 if (inDev) {
     app.use(require('@koa/cors')());
