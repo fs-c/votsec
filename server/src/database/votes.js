@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const debug = require('debug')('database:votes');
-
 const VoteSchema = new mongoose.Schema({
     title: { type: String },
     for: { type: Number, default: 0 },
@@ -19,18 +17,12 @@ const addVote = exports.add = async (v) => {
 	const status = { saved: [], failed: [] };
 	const votes = typeof v === 'Array' ? v : [ v ];
 
-	debug('adding %o votes', votes.length);
-
 	for (const vote of votes) {
 		try {
 			await new Vote(vote).save();
 
-			debug('added vote %o', vote);
-
 			status.saved.push(vote);
 		} catch (err) {
-			debug('failed adding vote %o: %o', vote, err);
-
 			status.failed.push({ vote, err });
 		}
 	}
@@ -39,11 +31,5 @@ const addVote = exports.add = async (v) => {
 };
 
 const getVotes = exports.get = async () => {
-	debug('getting votes');
-
-	const votes = await Vote.find({ hidden: false });
-
-	debug('found %o votes', votes.length);
-
-	return votes;
+	return await Vote.find({ hidden: false });
 }
