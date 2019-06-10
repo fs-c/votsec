@@ -1,51 +1,35 @@
-const debug = require('debug')('auth');
-const { config } = require('./server');
+const config = require('../../config');
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 
-const authRequired = exports.authRequired = (requiredGroup) => {
+const requireAuth = exports.requireAuth = (fastify, requiredGroup) => {
 	const verifier = new OktaJwtVerifier({
 		clientId: config.openID.client,
 		issuer: config.openID.issuer,
 		assertClaims: config.resourceServer.assertClaims,
 	});
 
-	return async (ctx, next) => {
-		debug('entering authRequired');
-
-		const authHeader = ctx.headers.authorization || '';
+	return async (request, reply, done) => {
+		const authHeader = request.headers.authorization || '';
 		const match = authHeader.match(/Bearer (.+)/);
 
-		debug('fetched bearer token')
-
-		if (!match || !match[1]) {
-			debug(authHeader, 'token not found');
-	
-			ctx.throw(401, 'No token provided');
-		}
+		fastify.assert(match && match[1], 400,
+			'Malformed or missing authentication header');
 
 		try {
-			debug('verifying token');
-
-			ctx.state.token = await verifier.verifyAccessToken(match[1]);
-
-			const { grp } = ctx.state.token.claims;
+			const token = await verifier.verifyAccessToken(match[1]);
+			const { grp } = token.claims;
 
 			if (!grp && requiredGroup) {
-				debug('groups are required but no groups field in token');
-
-				ctx.throw(401, 'Token error');
+				reply.forbidden('Groups required but not found');
 			}
 
-			if (!grp.includes(requiredGroup)) {
-				debug('required group %o is not in groups %o', requiredGroup,
-					grp);
-				
-				ctx.throw(401, 'Insufficient permissions');
-			}
+			fastify.assert(grp.includes(requiredGroup), 403)
 		} catch (err) {
-			ctx.throw(401, 'Unauthorized', err);
+			fastify.log.trace(err);
+
+			reply.forbidden('Invalid token');
 		}
 
-		await next();
+		done();
 	};
 };
