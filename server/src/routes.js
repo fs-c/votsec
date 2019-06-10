@@ -3,7 +3,7 @@ module.exports = (fastify, opts, next) => {
 
 	fastify.addHook('onRoute', (route) => routes.push({
 		method: route.method,
-		path: route.path.
+		path: route.path,
 	}));
 
 	fastify.get('/', async (request, reply) => {
