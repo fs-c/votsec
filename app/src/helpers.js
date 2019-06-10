@@ -16,4 +16,21 @@ async function checkAuthentication() {
 	}
 }
 
-export { checkAuthentication };
+// TODO: This is a quick hack
+function formatServerError(err) {
+	try {
+		let message = '';
+		const { data } = err.response;
+
+		if (data.error)
+			message += data.error;
+		if (data.message !== data.error)
+			message += ': ' + data.message;
+
+		return message;
+	} catch (e) { /* Swallow */}
+
+	return err.message;
+}
+
+export { checkAuthentication, formatServerError };

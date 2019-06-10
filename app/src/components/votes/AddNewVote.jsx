@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Form, Checkbox, Button, Message, Card, TextArea } from 'semantic-ui-react'
 
 import { config } from '../app/App';
-import { checkAuthentication } from '../../helpers';
+import { checkAuthentication, formatServerError } from '../../helpers';
 
 export default withAuth(class AddNewVote extends Component {
 	constructor(props) {
@@ -19,10 +19,6 @@ export default withAuth(class AddNewVote extends Component {
 	}
 
 	addNewVote = async () => {
-		this.checkAuthentication();
-
-		console.log('adding new vote', this.state);
-
 		this.setState({ loading: true });
 
 		try {
@@ -36,12 +32,10 @@ export default withAuth(class AddNewVote extends Component {
 			}, { headers: { Authorization: `Bearer ${accessToken}` } });
 
 			this.setState({ success: true });
-
-			console.log('added new vote');
 		} catch (err) {
-			console.error('submitVote', err);
+			console.error('submitVote', JSON.stringify(err));
 
-			this.setState({ error: err.message });
+			this.setState({ error: formatServerError(err) });
 		} finally {
 			this.setState({ loading: false });
 		}
