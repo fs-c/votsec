@@ -1,7 +1,7 @@
 require('dotenv').config();
 const config = require('../../config');
 
-const fastify = require('fastify')({ logger: 'trace' });
+const fastify = require('fastify')({ logger: { level: 'trace' } });
 
 fastify.register(require('fastify-sensible'));
 fastify.register(require('fastify-cors'), {
