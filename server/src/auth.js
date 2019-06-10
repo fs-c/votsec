@@ -23,11 +23,13 @@ const requireAuth = exports.requireAuth = (fastify, requiredGroup) => {
 				reply.forbidden('Groups required but not found');
 			}
 
-			fastify.assert(grp.includes(requiredGroup), 403)
+			fastify.assert(grp.includes(requiredGroup), 403,
+				'Insufficient permissions');
 		} catch (err) {
 			fastify.log.trace(err);
 
-			reply.forbidden('Invalid token');
+			// TODO: Respect custom error given to `assert`
+			reply.forbidden(err.message);
 		}
 
 		done();
