@@ -1,3 +1,5 @@
+const { requireAuth } = require('../auth');
+
 module.exports = (fastify, opts, next) => {
 	fastify.log.trace(fastify.database);
 
@@ -5,8 +7,10 @@ module.exports = (fastify, opts, next) => {
 		return await fastify.database.votes.get() || [];
 	});
 
-	fastify.post('/add', async (request, reply) => {
-
+	fastify.post('/add', {
+		preHandler: requireAuth(fastify, 'Admin'),
+	}, async (request, reply) => {
+		return await fastify.database.votes.add(request.body);
 	});
 
 	next();
