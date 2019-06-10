@@ -76,16 +76,6 @@ class VoteItem extends Component {
 		const endDate = moment(this.vote.endDate).fromNow();
 
 		return (
-			// <Item>
-			// 	<Item.Content>
-			// 		<Item.Header as='a'>{this.vote.title}</Item.Header>
-			// 		<Item.Meta>Started {startDate}, ending {endDate}</Item.Meta>
-			// 		<Item.Description>
-			// 			{this.vote.description}
-			// 		</Item.Description>
-			// 	</Item.Content>
-			// </Item>
-
 			<Segment basic>
 				<Grid>
 					<Grid.Column width={1}>
