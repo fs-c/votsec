@@ -4,6 +4,10 @@ const config = require('../../config');
 const fastify = require('fastify')({ logger: 'trace' });
 
 fastify.register(require('fastify-sensible'));
+fastify.register(require('fastify-cors'), {
+	// TODO: Actually implement CORS
+	origin: true,
+});
 
 fastify.register(require('./database').connector);
 fastify.register(require('./routes'));
