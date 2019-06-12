@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { ImplicitCallback, SecureRoute, Security } from '@okta/okta-react';
+import {
+	ImplicitCallback, SecureRoute, Security, withAuth
+} from '@okta/okta-react';
 
 import { Container } from 'semantic-ui-react';
 
@@ -10,7 +12,63 @@ import Home from '../home/Home';
 import Navbar from '../navbar/Navbar';
 import Profile from '../profile/Profile';
 
-class App extends Component {
+const AppContainer = withAuth(class extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = { loggedIn: false, admin: false, user: null };
+	}
+
+	async componentDidMount() {
+        this.checkAuthentication();
+    }
+
+    async componentDidUpdate() {
+        this.checkAuthentication();
+	}
+
+	// Expects `auth` prop to be injected through `withAuth`
+	checkAuthentication = async () => {
+		const loggedIn = await this.props.auth.isAuthenticated();
+
+		// Only execute once the auth status changed
+		if (loggedIn !== this.state.loggedIn) {
+			if (!this.state.user && loggedIn) {
+				const user = await this.props.auth.getUser();
+				const admin = (user.groups || []).includes('Admin');
+
+				this.setState({ loggedIn, user, admin });
+			} else {
+				this.setState({ loggedIn });
+			}
+		}
+	}
+
+	handleLogin = () => {
+		this.props.auth.login('/');
+	}
+
+	handleLogout = () => {
+		this.props.auth.login('/');
+    }
+
+    render() {
+        return (
+            <Container text style={{ marginTop: '7em' }}>
+                <Navbar loggedIn={this.state.loggedIn}
+                    handleLogin={this.handleLogin}
+                    handleLogout={this.handleLogout}
+                />
+
+                <Route path="/" exact component={Home} />
+                <Route path="/implicit/callback" component={ImplicitCallback} />
+                <SecureRoute path="/profile" component={Profile} />
+            </Container>
+        );
+    }
+});
+
+export default class App extends Component {
     render() {
         return (
             <Router>
@@ -20,17 +78,12 @@ class App extends Component {
 					redirect_uri={config.openID.redirect}
 					scope={config.openID.scope.split(' ')}
                 >
-                    <Navbar />
-					<Container text style={{ marginTop: '7em' }}>
-                        <Route path="/" exact component={Home} />
-                        <Route path="/implicit/callback" component={ImplicitCallback} />
-                        <SecureRoute path="/profile" component={Profile} />
-                    </Container>
+                    {/* TODO: Not a nice solution */}
+                    <AppContainer />
                 </Security>
             </Router>
         );
     }
 }
 
-export default App;
-export { config };
+export { config }; // For convenience
