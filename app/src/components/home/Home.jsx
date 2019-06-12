@@ -36,7 +36,7 @@ export default withAuth(class Home extends Component {
 					<Divider hidden />
 				</React.Fragment>}
 
-				<VoteList />
+				<VoteList isAdmin={this.state.isAdmin} />
 			</React.Fragment>
 		);
     }
