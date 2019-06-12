@@ -2,7 +2,14 @@ const { requireAuth } = require('../auth');
 
 module.exports = (fastify, opts, next) => {
 	fastify.get('/get', async (request, reply) => {
-		return await fastify.database.votes.get() || [];
+		const { id, skip, limit } = request.query;
+
+		if (id)
+			return await fastify.database.votes.getById(id);
+
+		return await fastify.database.votes.get({
+			skip: parseInt(skip), limit: parseInt(limit)
+		}) || [];
 	});
 
 	fastify.post('/add', {

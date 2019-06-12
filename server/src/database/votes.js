@@ -20,9 +20,18 @@ const addVote = exports.add = async (vote) => {
 	return await new Vote(vote).save();
 };
 
-const getVotes = exports.get = async () => {
-	return await Vote.find({ hidden: false });
-}
+const getVotes = exports.get = async (options) => {
+	const opt = Object.assign({
+		skip: 0,
+		limit: undefined,
+	}, options);
+
+	return await Vote.find({ hidden: false }, null, opt).sort('-startDate');
+};
+
+const getVoteById = exports.getById = async (id) => {
+	return await Vote.findById(id);
+};
 
 const deleteVote = exports.delete = async (id) => {
 	return await Vote.deleteOne({ _id: id });
