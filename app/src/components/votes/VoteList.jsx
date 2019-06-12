@@ -120,6 +120,8 @@ class VoteItem extends Component {
 		const startDate = moment(this.vote.startDate).fromNow();
 		const endDate = moment(this.vote.endDate).fromNow();
 
+		const timeOver = Date.now() >= endDate;
+
 		return (
 			!this.state.editing ? (<Segment basic>
 				<Grid>
@@ -135,7 +137,7 @@ class VoteItem extends Component {
 							{this.vote.title}
 
 							<Header.Subheader>
-								Started {startDate}, ending {endDate}
+								Started {startDate}, {timeOver ? 'ending' : 'ended'} {endDate}
 							</Header.Subheader>
 						</Header>
 
