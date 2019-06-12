@@ -9,6 +9,7 @@ import { Container } from 'semantic-ui-react';
 import config from '../../../../config.js';
 
 import Home from '../home/Home';
+import Vote from '../votes/Vote';
 import Navbar from '../navbar/Navbar';
 import Profile from '../profile/Profile';
 
@@ -78,6 +79,8 @@ const AppContainer = withAuth(class extends Component {
 					<SecureRoute path="/profile" render={(props) => (
 						<Profile {...props} user={this.state.user} />
 					)} />
+
+					<SecureRoute path="/vote/:key" component={Vote} />
 				</Container>
 
 				<Route path="/implicit/callback" component={ImplicitCallback} />
