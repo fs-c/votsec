@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Menu } from 'semantic-ui-react';
+import { Menu, Container } from 'semantic-ui-react';
 
 export default class Navbar extends Component {
     render() {
@@ -10,15 +10,17 @@ export default class Navbar extends Component {
 			: this.props.handleLogout;
 
         return (
-			<Menu fixed='top' size='large' inverted>
-				<Menu.Item name='votsec' content='votsec' header href="/" />
+			<Menu size='large' inverted style={{ borderRadius: '0' }}>
+				<Container>
+					<Menu.Item name='votsec' content='votsec' header href="/" />
 
-				{this.props.loggedIn &&
-					<Menu.Item name='profile' href='/profile' />}
+					{this.props.loggedIn &&
+						<Menu.Item name='profile' href='/profile' />}
 
-				<Menu.Menu position='right'>
-					<Menu.Item name={name} onClick={handler} />
-				</Menu.Menu>
+					<Menu.Menu position='right'>
+						<Menu.Item name={name} onClick={handler} />
+					</Menu.Menu>
+				</Container>
 			</Menu>
         );
     }
