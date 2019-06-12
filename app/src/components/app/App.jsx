@@ -16,7 +16,9 @@ const AppContainer = withAuth(class extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { loggedIn: false, admin: false, user: null };
+        this.state = {
+			loggedIn: false, admin: false, user: null, accessToken: undefined,
+		};
 	}
 
 	async componentDidMount() {
@@ -36,8 +38,9 @@ const AppContainer = withAuth(class extends Component {
 			if (!this.state.user && loggedIn) {
 				const user = await this.props.auth.getUser();
 				const admin = (user.groups || []).includes('Admin');
+				const accessToken = await this.props.auth.getAccessToken();
 
-				this.setState({ loggedIn, user, admin });
+				this.setState({ loggedIn, user, admin, accessToken });
 			} else {
 				this.setState({ loggedIn });
 			}
@@ -55,16 +58,18 @@ const AppContainer = withAuth(class extends Component {
     render() {
         return (
             <React.Fragment>
-                <Navbar loggedIn={this.state.loggedIn}
-                    handleLogin={this.handleLogin}
+				<Navbar loggedIn={this.state.loggedIn}
+					handleLogin={this.handleLogin}
                     handleLogout={this.handleLogout}
                 />
 
 				<Container text>
 					<Route path="/" exact
 						render={(props) => (
-							<Home {...props} showAddVote={this.state.admin} 
+							<Home {...props}
+								showAddVote={this.state.admin}
 								allowVoteEditing={this.state.admin}
+								accessToken={this.state.accessToken}
 							/>
 						)}
 					/>

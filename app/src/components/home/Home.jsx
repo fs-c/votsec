@@ -11,7 +11,7 @@ export default class Home extends Component {
 			<React.Fragment>
                 {this.props.showAddVote && (
 					<React.Fragment>
-						<AddNewVote />
+						<AddNewVote accessToken={this.props.accessToken} />
 						<Divider hidden />
 					</React.Fragment>
 				)}

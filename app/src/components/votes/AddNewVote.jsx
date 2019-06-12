@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { withAuth } from '@okta/okta-react';
 
 import axios from 'axios';
 
@@ -8,7 +7,7 @@ import { Form, Checkbox, Button, Message, Card, TextArea } from 'semantic-ui-rea
 import { config } from '../app/App';
 import { formatServerError } from '../../helpers';
 
-export default withAuth(class AddNewVote extends Component {
+export default class AddNewVote extends Component {
 	constructor(props) {
 		super(props);
 
@@ -20,7 +19,7 @@ export default withAuth(class AddNewVote extends Component {
 		this.setState({ loading: true });
 
 		try {
-			const accessToken = await this.props.auth.getAccessToken();
+			const { accessToken } = this.props;
 
 			const { url, port } = config.resourceServer;
 			await axios.post(`${url}:${port}/votes/add`, {
@@ -74,7 +73,7 @@ export default withAuth(class AddNewVote extends Component {
 			</Card>
 		);
 	}
-});
+};
 
 export class AddVoteForm extends Component {
 	render() {
