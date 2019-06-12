@@ -74,7 +74,10 @@ const AppContainer = withAuth(class extends Component {
 						)}
 					/>
 
-					<SecureRoute path="/profile" component={Profile} />
+					{/* TODO: This is a debugging leftover */}
+					<SecureRoute path="/profile" render={(props) => (
+						<Profile {...props} user={this.state.user} />
+					)} />
 				</Container>
 
 				<Route path="/implicit/callback" component={ImplicitCallback} />
