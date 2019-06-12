@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const VoteSchema = new mongoose.Schema({
-    title: { type: String },
+    title: { type: String, index: { unique: true } },
     for: { type: Number, default: 0 },
     against: { type: Number, default: 0 },
     description: { type: String },
@@ -13,23 +13,17 @@ const VoteSchema = new mongoose.Schema({
 
 const Vote = exports.Vote = mongoose.model('Vote', VoteSchema);
 
-const addVote = exports.add = async (v) => {
-	const status = { saved: [], failed: [] };
-	const votes = typeof v === 'Array' ? v : [ v ];
+const addVote = exports.add = async (vote) => {
+	if (Vote.find({ title: vote.title }))
+		throw new Error('Duplicate title');
 
-	for (const vote of votes) {
-		try {
-			await new Vote(vote).save();
-
-			status.saved.push(vote);
-		} catch (err) {
-			status.failed.push({ vote, err });
-		}
-	}
-
-	return status;
+	return await new Vote(vote).save();
 };
 
 const getVotes = exports.get = async () => {
 	return await Vote.find({ hidden: false });
 }
+
+const deleteVote = exports.delete = async (id) => {
+	return await Vote.deleteOne({ _id: id });
+};

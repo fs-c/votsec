@@ -13,13 +13,15 @@ const connect = exports.connect = require('./database/connect')
 	.connect.bind(this, dbConfig);
 
 /* Votes is required to implement and export the async functions
- * 		- addVote(vote || vote[])
- * 		- getVotes()
+ * 		- add(vote || vote[])
+ * 		- get()
+ * 		- delete(id)
  */
 const votes = require('./database/votes');
 
-exports.addVote = votes.addVote;
-exports.getVotes = votes.getVotes;
+exports.addVote = votes.add;
+exports.getVotes = votes.get;
+exports.deleteVote = votes.delete;
 
 const fastifyPlugin = require('fastify-plugin');
 
