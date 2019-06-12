@@ -54,16 +54,26 @@ const AppContainer = withAuth(class extends Component {
 
     render() {
         return (
-            <Container text style={{ marginTop: '7em' }}>
+            <React.Fragment>
                 <Navbar loggedIn={this.state.loggedIn}
                     handleLogin={this.handleLogin}
                     handleLogout={this.handleLogout}
                 />
 
-                <Route path="/" exact component={Home} />
-                <Route path="/implicit/callback" component={ImplicitCallback} />
-                <SecureRoute path="/profile" component={Profile} />
-            </Container>
+				<Container text>
+					<Route path="/" exact
+						render={(props) => (
+							<Home {...props} showAddVote={this.state.admin} 
+								allowVoteEditing={this.state.admin}
+							/>
+						)}
+					/>
+
+					<SecureRoute path="/profile" component={Profile} />
+				</Container>
+
+				<Route path="/implicit/callback" component={ImplicitCallback} />
+            </React.Fragment>
         );
     }
 });
