@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Form, Checkbox, Button, Message, Card, TextArea } from 'semantic-ui-react'
 
 import { config } from '../app/App';
-import { checkAuthentication, formatServerError } from '../../helpers';
+import { formatServerError } from '../../helpers';
 
 export default withAuth(class AddNewVote extends Component {
 	constructor(props) {
@@ -14,8 +14,6 @@ export default withAuth(class AddNewVote extends Component {
 
 		this.state = { error: null, loading: false, success: false,
 			voteTitle: '', voteDescription: '', voteHidden: false };
-
-		this.checkAuthentication = checkAuthentication.bind(this);
 	}
 
 	addNewVote = async () => {
@@ -35,7 +33,7 @@ export default withAuth(class AddNewVote extends Component {
 		} catch (err) {
 			console.error('submitVote', JSON.stringify(err));
 
-			this.setState({ error: formatServerError(err) });
+			this.setState({ error: formatServerError(err), success: false });
 		} finally {
 			this.setState({ loading: false });
 		}
@@ -78,11 +76,10 @@ export default withAuth(class AddNewVote extends Component {
 	}
 });
 
-class AddVoteForm extends Component {
+export class AddVoteForm extends Component {
 	render() {
 		return (
 			<Form error={this.props.error !== null}
-				loading={this.props.loading}
 				success={this.props.success}
 				onSubmit={this.props.addNewVote}
 			>
@@ -111,7 +108,9 @@ class AddVoteForm extends Component {
 				</Form.Field>
 
 				<Form.Field>
-					<Button type='submit'>Add vote</Button>
+					<Button type='submit' loading={this.props.loading}>
+						Add vote
+					</Button>
 				</Form.Field>
 			</Form>
 		);
