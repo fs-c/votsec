@@ -8,7 +8,7 @@ const requireAuth = exports.requireAuth = (fastify, requiredGroup) => {
 		assertClaims: config.resourceServer.assertClaims,
 	});
 
-	return async (request, reply, done) => {
+	return async (request, reply) => {
 		const authHeader = request.headers.authorization || '';
 		const match = authHeader.match(/Bearer (.+)/);
 
@@ -32,6 +32,6 @@ const requireAuth = exports.requireAuth = (fastify, requiredGroup) => {
 			reply.forbidden(err.message);
 		}
 
-		done();
+		return;
 	};
 };
