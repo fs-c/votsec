@@ -75,7 +75,7 @@ export default class AddNewVote extends Component {
 	}
 };
 
-export class AddVoteForm extends Component {
+class AddVoteForm extends Component {
 	render() {
 		return (
 			<Form error={this.props.error !== null}
