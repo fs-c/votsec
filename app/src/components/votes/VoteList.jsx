@@ -104,7 +104,7 @@ class VoteListItem extends Component {
 							{this.props.title}
 
 							<Header.Subheader>
-								Started {formatVoteTimes(this.props.startDate, this.props.endDate)}
+								{formatVoteTimes(this.props.startDate, this.props.endDate)}
 							</Header.Subheader>
 						</Header>
 
