@@ -1,16 +1,110 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { ImplicitCallback, SecureRoute, Security } from '@okta/okta-react';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import {
+	ImplicitCallback, SecureRoute, Security, withAuth
+} from '@okta/okta-react';
 
 import { Container } from 'semantic-ui-react';
 
 import config from '../../../../config.js';
 
 import Home from '../home/Home';
+import Vote from '../votes/Vote';
 import Navbar from '../navbar/Navbar';
 import Profile from '../profile/Profile';
 
-class App extends Component {
+const AppContainer = withAuth(class extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+			loggedIn: false, admin: false, user: null, accessToken: undefined,
+			redirectToHome: false,
+		};
+	}
+
+	async componentDidMount() {
+        this.checkAuthentication();
+    }
+
+    async componentDidUpdate() {
+        this.checkAuthentication();
+	}
+
+	// Expects `auth` prop to be injected through `withAuth`
+	checkAuthentication = async () => {
+		const loggedIn = await this.props.auth.isAuthenticated();
+
+		// Only execute once the auth status changed
+		if (loggedIn !== this.state.loggedIn) {
+			if (!this.state.user && loggedIn) {
+				const user = await this.props.auth.getUser();
+				const admin = (user.groups || []).includes('Admin');
+				const accessToken = await this.props.auth.getAccessToken();
+
+				this.setState({ loggedIn, user, admin, accessToken });
+			} else {
+				this.setState({ loggedIn });
+			}
+		}
+	}
+
+	handleLogin = () => {
+		this.props.auth.login('/');
+	}
+
+	handleLogout = () => {
+		this.props.auth.login('/');
+	}
+	
+	handleVoteDeletion = () => {
+		this.setState({ redirectToHome: true });
+	}
+
+    render() {
+		if (this.state.redirectToHome === true) {
+			this.setState({ redirectToHome: false });
+
+			return <Redirect to='/' />
+		}
+
+        return (
+            <React.Fragment>
+				<Navbar loggedIn={this.state.loggedIn}
+					handleLogin={this.handleLogin}
+                    handleLogout={this.handleLogout}
+                />
+
+				<Container text>
+					<Route path='/' exact
+						render={(props) => (
+							<Home {...props}
+								showAddVote={this.state.admin}
+								allowVoteEditing={this.state.admin}
+								accessToken={this.state.accessToken}
+							/>
+						)}
+					/>
+
+					{/* TODO: This is a debugging leftover */}
+					<SecureRoute path='/profile' render={(props) => (
+						<Profile {...props} user={this.state.user} />
+					)} />
+
+					<SecureRoute path='/vote/:key' render={(props) => (
+						<Vote {...props} accessToken={this.state.accessToken}
+							handleDeletion={this.handleVoteDeletion}
+						/>
+					)} />
+				</Container>
+
+				<Route path='/implicit/callback' component={ImplicitCallback} />
+            </React.Fragment>
+        );
+    }
+});
+
+export default class App extends Component {
     render() {
         return (
             <Router>
@@ -20,17 +114,12 @@ class App extends Component {
 					redirect_uri={config.openID.redirect}
 					scope={config.openID.scope.split(' ')}
                 >
-                    <Navbar />
-					<Container text style={{ marginTop: '7em' }}>
-                        <Route path="/" exact component={Home} />
-                        <Route path="/implicit/callback" component={ImplicitCallback} />
-                        <SecureRoute path="/profile" component={Profile} />
-                    </Container>
+                    {/* TODO: Not a nice solution */}
+                    <AppContainer />
                 </Security>
             </Router>
         );
     }
 }
 
-export default App;
-export { config };
+export { config }; // For convenience
