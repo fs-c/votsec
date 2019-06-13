@@ -1,4 +1,7 @@
-async function checkAuthentication() {
+import moment from 'moment';
+import config from '../../config.js';
+
+export async function checkAuthentication() {
 	const authenticated = await this.props.auth.isAuthenticated();
 
 	if (this.state.authenticated !== authenticated) {
@@ -17,7 +20,7 @@ async function checkAuthentication() {
 }
 
 // TODO: This is a quick hack
-function formatServerError(err) {
+export function formatServerError(err) {
 	try {
 		let message = '';
 		const { data } = err.response;
@@ -33,4 +36,16 @@ function formatServerError(err) {
 	return err.message;
 }
 
-export { checkAuthentication, formatServerError };
+export function formatVoteTimes(start, end, startLarge = true) {
+	const startDate = moment(start).fromNow();
+	const endDate = moment(end).fromNow();
+
+	const timeOver = Date.now() >= end;
+
+	return `${startLarge ? 'S' : 's'}tarted ${startDate}, ${timeOver ? 'ending' : 'ended'} ${endDate}`;
+}
+
+const { url, port } = config.resourceServer;
+export function buildApiString(path) {
+	return `${url}:${port}/${path}`;
+}

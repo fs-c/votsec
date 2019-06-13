@@ -2,15 +2,11 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 import axios from 'axios';
-import moment from 'moment';
 
-import {
-	Item, Message, Divider, Icon, List, Grid, Header, Segment, Dropdown, Form,
-	Card, TextArea, Checkbox, Button,
-} from 'semantic-ui-react';
+import { Message, Divider, Grid, Header, Segment } from 'semantic-ui-react';
 
 import { config } from '../app/App';
-import { formatServerError } from '../../helpers'
+import { formatServerError, formatVoteTimes } from '../../helpers'
 
 export default class NewestVotesList extends Component {
 	constructor(props) {
@@ -97,27 +93,18 @@ class VoteList extends Component {
 
 class VoteListItem extends Component {
 	render() {
-		const startDate = moment(this.props.startDate).fromNow();
-		const endDate = moment(this.endDate).fromNow();
-
-		const timeOver = Date.now() >= endDate;
-
 		return (
 			<Segment basic>
 				<Grid>
-					{/* <Grid.Column width={1}>
-						<List>
-							<Item><Icon circular link name='arrow up' color='green' /></Item>
-							<Item><Icon circular link name='arrow down' color='red' /></Item>
-						</List>
-					</Grid.Column> */}
-
 					<Grid.Column width={14}>
-						<Header as={Link} to={`/vote/${this.props._id}`}>
+						<Header as={Link} to={{
+							pathname: `/vote/${this.props._id}`,
+							state: { vote: this.props },
+						}}>
 							{this.props.title}
 
 							<Header.Subheader>
-								Started {startDate}, {timeOver ? 'ending' : 'ended'} {endDate}
+								Started {formatVoteTimes(this.props.startDate, this.props.endDate)}
 							</Header.Subheader>
 						</Header>
 
