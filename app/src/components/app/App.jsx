@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import {
 	ImplicitCallback, SecureRoute, Security, withAuth
 } from '@okta/okta-react';
@@ -19,6 +19,7 @@ const AppContainer = withAuth(class extends Component {
 
         this.state = {
 			loggedIn: false, admin: false, user: null, accessToken: undefined,
+			redirectToHome: false,
 		};
 	}
 
@@ -54,9 +55,19 @@ const AppContainer = withAuth(class extends Component {
 
 	handleLogout = () => {
 		this.props.auth.login('/');
-    }
+	}
+	
+	handleVoteDeletion = () => {
+		this.setState({ redirectToHome: true });
+	}
 
     render() {
+		if (this.state.redirectToHome === true) {
+			this.setState({ redirectToHome: false });
+
+			return <Redirect to='/' />
+		}
+
         return (
             <React.Fragment>
 				<Navbar loggedIn={this.state.loggedIn}
@@ -65,7 +76,7 @@ const AppContainer = withAuth(class extends Component {
                 />
 
 				<Container text>
-					<Route path="/" exact
+					<Route path='/' exact
 						render={(props) => (
 							<Home {...props}
 								showAddVote={this.state.admin}
@@ -76,14 +87,18 @@ const AppContainer = withAuth(class extends Component {
 					/>
 
 					{/* TODO: This is a debugging leftover */}
-					<SecureRoute path="/profile" render={(props) => (
+					<SecureRoute path='/profile' render={(props) => (
 						<Profile {...props} user={this.state.user} />
 					)} />
 
-					<SecureRoute path="/vote/:key" component={Vote} />
+					<SecureRoute path='/vote/:key' render={(props) => (
+						<Vote {...props} accessToken={this.state.accessToken}
+							handleDeletion={this.handleVoteDeletion}
+						/>
+					)} />
 				</Container>
 
-				<Route path="/implicit/callback" component={ImplicitCallback} />
+				<Route path='/implicit/callback' component={ImplicitCallback} />
             </React.Fragment>
         );
     }
