@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Divider } from 'semantic-ui-react';
 
-import VoteList from '../votes/VoteList';
+import NewestVotesList from '../votes/VoteList';
 import AddNewVote from '../votes/AddNewVote';
 
 export default class Home extends Component {
@@ -16,7 +16,7 @@ export default class Home extends Component {
 					</React.Fragment>
 				)}
 
-				<VoteList isAdmin={this.props.allowVoteEditing} />
+				<NewestVotesList />
 			</React.Fragment>
 		);
     }
