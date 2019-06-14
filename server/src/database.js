@@ -9,9 +9,15 @@ const dbConfig = config.resourceServer.mongoDB;
 /* Connect is required to export a single async function which returns once
  * a connection was established/once the DB provider is ready.
  */
-const connect = exports.connect = require('./database/connect')
+const connect = require('./database/connect')
 	.connect.bind(this, dbConfig);
 
+/* Votes is required to implement the async functions
+ * 		- add(vote)
+ *		- delete(id)
+ *		- get([options])
+ *		- getById(id)
+ */
 const votes = require('./database/votes');
 
 const fastifyPlugin = require('fastify-plugin');
