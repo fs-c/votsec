@@ -14,23 +14,16 @@ const VoteSchema = new mongoose.Schema({
 const Vote = exports.Vote = mongoose.model('Vote', VoteSchema);
 
 const addVote = exports.add = async (vote) => {
-	if (Vote.find({ title: vote.title }))
-		throw new Error('Duplicate title');
-
 	return await new Vote(vote).save();
 };
 
-const getVotes = exports.get = async (options) => {
+const getVotes = exports.get = async (conditions, options) => {
 	const opt = Object.assign({
 		skip: 0,
 		limit: undefined,
 	}, options);
 
-	return await Vote.find({ hidden: false }, null, opt).sort('-startDate');
-};
-
-const getVoteById = exports.getById = async (id) => {
-	return await Vote.findById(id);
+	return await Vote.find(conditions, null, opt).sort('-startDate');
 };
 
 const deleteVote = exports.delete = async (id) => {

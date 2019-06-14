@@ -5,9 +5,9 @@ module.exports = (fastify, opts, next) => {
 		const { id, skip, limit } = request.query;
 
 		if (id)
-			return await fastify.database.votes.getById(id);
+			return await fastify.database.votes.get({ _id: id }, { limit: 1 });
 
-		return await fastify.database.votes.get({
+		return await fastify.database.votes.get({ hidden: false }, {
 			skip: parseInt(skip), limit: parseInt(limit)
 		}) || [];
 	});
@@ -16,6 +16,9 @@ module.exports = (fastify, opts, next) => {
 		preHandler: requireAuth(fastify, 'Admin'),
 	}, async (request, reply) => {
 		try {
+			if (await fastify.database.votes.get({ title: request.body.title }))
+				throw new Error('Duplicate title');
+
 			return await fastify.database.votes.add(request.body); 
 		} catch (err) {
 			reply.badRequest(err.message);
