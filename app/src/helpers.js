@@ -40,9 +40,9 @@ export function formatVoteTimes(start, end, startLarge = true) {
 	const startDate = moment(start).fromNow();
 	const endDate = moment(end).fromNow();
 
-	const timeOver = Date.now() >= end;
+	const timeOver = Date.now() >= new Date(end);
 
-	return `${startLarge ? 'S' : 's'}tarted ${startDate}, ${timeOver ? 'ending' : 'ended'} ${endDate}`;
+	return `${startLarge ? 'S' : 's'}tarted ${startDate}, ${timeOver ? 'ended' : 'ending'} ${endDate}`;
 }
 
 const { url, port } = config.resourceServer;
