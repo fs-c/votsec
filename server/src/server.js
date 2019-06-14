@@ -11,7 +11,7 @@ fastify.register(require('fastify-cors'), {
 
 fastify.register(require('./database').connector);
 
-const prefix = process.env.PREFIX || '/';
+const prefix = process.env.PREFIX || config.resourceServer.prefix || '/';
 fastify.register(require('./routes'), { prefix });
 
 const port = process.env.PORT || config.resourceServer.port || 8000;
