@@ -1,35 +1,54 @@
 const config = require('../../config');
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 
+const verifier = new OktaJwtVerifier({
+	clientId: config.openID.client,
+	issuer: config.openID.issuer,
+	assertClaims: config.resourceServer.assertClaims,
+});
+
+class AuthError extends Error {
+	constructor(message, status = 'badRequest') {
+		super(message);
+
+		this.status = status;
+	}
+}
+
+const getAccessToken = exports.getAccessToken = (headers) => {
+	const match = (headers.authorization || '').match(/Bearer (.+)/);
+
+	if (!match || !match[1]) {
+		throw new AuthError('Malformed or missing authentication header');
+	}
+
+	return match[1];
+};
+
+const verifyAuth = exports.verifyAuth = async (accessToken, group) => {
+	const token = await verifier.verifyAccessToken(accessToken);
+	const groups = token.claims.grp;
+
+	if (group) {
+		if (!groups) {
+			throw new AuthError('Groups required but not found');
+		}
+
+		if (!groups.includes(group)) {
+			throw new AuthError('Insufficient permissions', 'forbidden');
+		}
+	}
+};
+
 const requireAuth = exports.requireAuth = (fastify, requiredGroup) => {
-	const verifier = new OktaJwtVerifier({
-		clientId: config.openID.client,
-		issuer: config.openID.issuer,
-		assertClaims: config.resourceServer.assertClaims,
-	});
-
 	return async (request, reply) => {
-		const authHeader = request.headers.authorization || '';
-		const match = authHeader.match(/Bearer (.+)/);
-
-		fastify.assert(match && match[1], 400,
-			'Malformed or missing authentication header');
-
 		try {
-			const token = await verifier.verifyAccessToken(match[1]);
-			const { grp } = token.claims;
-
-			if (!grp && requiredGroup) {
-				reply.forbidden('Groups required but not found');
-			}
-
-			fastify.assert(grp.includes(requiredGroup), 403,
-				'Insufficient permissions');
+			await verifyAuth(getAccessToken(request.headers), requiredGroup);
 		} catch (err) {
 			fastify.log.trace(err);
+			const status = err.status || 'forbidden';
 
-			// TODO: Respect custom error given to `assert`
-			reply.forbidden(err.message);
+			reply[status](err.message);
 		}
 
 		return;
