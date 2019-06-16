@@ -32,9 +32,8 @@ export default class NewestVotesList extends Component {
 
 		try {
 			const res = await axios.get(`${url}:${port}/votes/get`);
-			const votes = res.data.sort((a, b) => a.startDate - b.startDate);
 
-			this.setState({ votes, error: null });
+			this.setState({ votes: res.data, error: null });
 		} catch (err) {
 			console.error('getVotes', err);
 
