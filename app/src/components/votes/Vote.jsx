@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Card, Button, Divider, Message } from 'semantic-ui-react';
 
-import { config } from '../app/App';
 import { buildApiString, formatVoteTimes, formatServerError } from '../../helpers';
 
 export default class Vote extends Component {
