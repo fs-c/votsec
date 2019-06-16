@@ -55,7 +55,9 @@ export default class NewestVotesList extends Component {
 			this.setState({ error: formatServerError(err) });
 		}
 
-		this.setState({ votes: this.state.votes.filter((vote) => vote._id != name) });
+		this.setState({
+			votes: this.state.votes.filter((vote) => vote._id !== name),
+		});
 	}
 
 	handleMessageDismiss = () => {
