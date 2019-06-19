@@ -9,9 +9,14 @@ export default class Vote extends Component {
 	constructor(props) {
 		super(props);
 
-		this.vote = this.props.location.state.vote;
-		this.state = { votingEnabled: this.vote.endDate > Date.now(),
-			error: null, loadingDelete: false };
+		this.state = { error: null, loadingDelete: false };
+
+		if (!this.props.location) {
+			this.setState({ fromAuth: true });
+		} else {
+			this.vote = this.props.location.state.vote;
+			this.setState({ votingEnabled: this.vote.endDate > Date.now() });
+		}
 	}
 
 	deleteVote = async () => {
@@ -34,6 +39,8 @@ export default class Vote extends Component {
 	}
 
 	render() {
+
+
 		const vote = this.vote || {
 			title: 'Vote title',
 			description: 'A more detailed description of the vote'
