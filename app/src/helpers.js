@@ -49,3 +49,7 @@ const { url, port } = config.resourceServer;
 export function buildApiString(path) {
 	return `${url}:${port}/${path}`;
 }
+
+export function getDisplayName(WrappedComponent) {
+	return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+}
