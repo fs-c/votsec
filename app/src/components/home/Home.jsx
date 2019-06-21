@@ -1,22 +1,16 @@
 import React, { Component } from 'react';
 
-import { Divider } from 'semantic-ui-react';
+import Container from 'react-bootstrap/Container';
 
-import NewestVotesList from '../votes/VoteList';
-import AddNewVote from '../votes/AddNewVote';
+import PopularVotes from '../votes/PopularVotes';
 
 export default class Home extends Component {
     render() {
         return (
 			<React.Fragment>
-                {this.props.showAddVote && (
-					<React.Fragment>
-						<AddNewVote accessToken={this.props.accessToken} />
-						<Divider hidden />
-					</React.Fragment>
-				)}
-
-				<NewestVotesList />
+				<Container>
+					<PopularVotes />
+				</Container>
 			</React.Fragment>
 		);
     }
