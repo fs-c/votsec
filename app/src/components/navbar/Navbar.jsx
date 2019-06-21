@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 
 export default function ({ loggedIn, handleLogin, handleLogout }) {
@@ -23,9 +24,9 @@ export default function ({ loggedIn, handleLogin, handleLogout }) {
 					</Nav>
 
 					<Nav className='ml-auto'>
-						<Nav.Link onClick={handler}>
+						<Button variant='outline-light' onClick={handler}>
 							{loggedIn ? 'Logout' : 'Login'}
-						</Nav.Link>
+						</Button>
 					</Nav>
 				</Navbar.Collapse>
 			</Container>
