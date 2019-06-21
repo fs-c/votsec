@@ -1,27 +1,34 @@
 import React, { Component } from 'react';
 
-import { Menu, Container } from 'semantic-ui-react';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container';
 
-export default class Navbar extends Component {
-    render() {
-		const { loggedIn } = this.props;
-		const name = loggedIn ? 'logout' : 'login';
-		const handler = loggedIn ? this.props.handleLogin
-			: this.props.handleLogout;
+export default function ({ loggedIn, handleLogin, handleLogout }) {
+	const handler = loggedIn ? handleLogout : handleLogin;
 
-        return (
-			<Menu size='large' inverted style={{ borderRadius: '0' }}>
-				<Container>
-					<Menu.Item name='votsec' content='votsec' header href="/" />
+	return (
+		<Navbar bg='dark' variant='dark' expand='md'>
+			<Container>
+				<Navbar.Brand href='/' className=''>votsec</Navbar.Brand>
 
-					{this.props.loggedIn &&
-						<Menu.Item name='profile' href='/profile' />}
+				<Navbar.Toggle aria-controls='collapsing-navbar' />
 
-					<Menu.Menu position='right'>
-						<Menu.Item name={name} onClick={handler} />
-					</Menu.Menu>
-				</Container>
-			</Menu>
-        );
-    }
+				<Navbar.Collapse id='collapsing-navbar'>
+					<Nav>
+						{loggedIn &&
+							<Nav.Link href='/profile'>Profile</Nav.Link>}
+
+						<Nav.Link disabled>About</Nav.Link>
+					</Nav>
+
+					<Nav className='ml-auto'>
+						<Nav.Link onClick={handler}>
+							{loggedIn ? 'Logout' : 'Login'}
+						</Nav.Link>
+					</Nav>
+				</Navbar.Collapse>
+			</Container>
+		</Navbar>
+	);
 }
