@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-import { ImplicitCallback, SecureRoute, Security, withAuth } from '@okta/okta-react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { ImplicitCallback, Security, withAuth } from '@okta/okta-react';
 
 import Container from 'react-bootstrap/Container';
 
