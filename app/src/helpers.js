@@ -31,7 +31,7 @@ export function formatServerError(err) {
 			message += ': ' + data.message;
 
 		return message;
-	} catch (e) { /* Swallow */}
+	} catch (e) { /* Swallow */ }
 
 	return err.message;
 }
