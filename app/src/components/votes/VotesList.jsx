@@ -15,10 +15,10 @@ const VotesList = ({ error, votes }) => {
 		<React.Fragment>
 			<ErrorMessage error={error} />
 
-			{votes &&  (
+			{votes && (
 				<ListGroup>
 					{votes.map((vote) => (
-						<VotesListItem  key={vote._id} {...vote} />
+						<VotesListItem key={vote._id} {...vote} />
 					))}
 				</ListGroup>
 			)}
@@ -32,7 +32,7 @@ const CustomToggle = ({ children, onClick }) => {
 
 		onClick(e);
 	};
-	
+
 	return (
 		<Button variant='outline-secondary' onClick={handleClick}>
 			{children}
@@ -45,7 +45,7 @@ const VotesListItem = ({ title, startDate, endDate }) => {
 		<ListGroup.Item action>
 			<div className='d-flex w-100 justify-content-between align-items-center'>
 				<div>
-					<b>{title}</b><br/>
+					<b>{title}</b><br />
 					<small className='text-muted'>
 						{formatVoteTimes(startDate, endDate)}
 					</small>
