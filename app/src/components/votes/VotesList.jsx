@@ -13,7 +13,7 @@ import { formatVoteTimes } from '../../helpers';
 const VotesList = ({ error, votes }) => {
 	return (
 		<React.Fragment>
-			<ErrorMessage error={error} />
+			<ErrorMessage error={error} prefix='Failed to refresh votes: ' />
 
 			{votes && (
 				<ListGroup>
