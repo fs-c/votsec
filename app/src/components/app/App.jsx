@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/Container';
 import config from '../../../../config.js';
 
 import Home from '../home/Home';
-import Navbar from '../navbar/Navbar';
+import Navigation from '../navigation/Navigation';
 
 const AppContainer = withAuth(class extends Component {
     constructor(props) {
@@ -55,7 +55,7 @@ const AppContainer = withAuth(class extends Component {
     render() {
         return (
             <React.Fragment>
-				<Navbar loggedIn={this.state.loggedIn}
+				<Navigation loggedIn={this.state.loggedIn}
 					handleLogin={this.handleLogin}
                     handleLogout={this.handleLogout}
                 />

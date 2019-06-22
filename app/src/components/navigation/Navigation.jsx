@@ -5,7 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 
-export default function ({ loggedIn, handleLogin, handleLogout }) {
+const Navigation = ({ loggedIn, handleLogin, handleLogout }) => {
 	const handler = loggedIn ? handleLogout : handleLogin;
 
 	return (
@@ -32,4 +32,6 @@ export default function ({ loggedIn, handleLogin, handleLogout }) {
 			</Container>
 		</Navbar>
 	);
-}
+};
+
+export default Navigation;
