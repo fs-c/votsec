@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@okta/okta-react": "^1.2.0",
+    "@primer/octicons-react": "^9.1.1",
     "@sturmwalzer/react-scripts": "^3.1.0",
     "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
