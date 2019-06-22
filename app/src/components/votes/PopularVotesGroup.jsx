@@ -4,18 +4,14 @@ import Alert from 'react-bootstrap/Alert';
 import Card from 'react-bootstrap/Card';
 import CardColumns from 'react-bootstrap/CardColumns';
 
+import ErrorMessage from '../ErrorMessage';
+
 import { formatVoteTimes } from '../../helpers';
 
 const PopularVotesGroup = ({ error, votes }) => {
 	return (
 		<React.Fragment>
-			<div className='row justify-content-center align-items-center'>
-				<Alert show={error !== null} variant='danger'
-					className='md-auto'
-				>
-					Failed to load votes: {error}
-				</Alert>
-			</div>
+			<ErrorMessage error={error}/>
 
 			{votes && (
 				<CardColumns>
