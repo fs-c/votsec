@@ -26,25 +26,29 @@ const VotesList = ({ error, votes }) => {
 	);
 };
 
-const CustomToggle = ({ children, onClick }) => {
-	const handleClick = (e) => {
+class CustomToggle extends React.Component {
+	handleClick = (e) => {
 		e.preventDefault();
 
-		onClick(e);
-	};
+		this.props.onClick(e);
+	}
 
-	return (
-		<Button variant='outline-secondary' onClick={handleClick}>
-			{children}
-		</Button>
-	);
-};
+	render() {
+		return (
+			<Button variant='outline-secondary' onClick={this.handleClick}>
+				{this.props.children}
+			</Button>
+		);
+	}
+}
 
 const VotesListItem = ({ title, startDate, endDate }) => {
+	const disabled = new Date(endDate) < Date.now();
+
 	return (
-		<ListGroup.Item action>
+		<ListGroup.Item action={!disabled} as='div'>
 			<div className='d-flex w-100 justify-content-between align-items-center'>
-				<div>
+				<div className={disabled && 'text-muted'}>
 					<b>{title}</b><br />
 					<small className='text-muted'>
 						{formatVoteTimes(startDate, endDate)}
