@@ -15,7 +15,7 @@ export default function withVotes(query = {}, interval = 10000) {
 
 			async componentDidMount() {
 				this.getVotes();
-		
+
 				this.votesTimer = setInterval(() => this.getVotes(), interval);
 			}
 
@@ -31,7 +31,7 @@ export default function withVotes(query = {}, interval = 10000) {
 					this.setState({ votes: data, error: null });
 				} catch (err) {
 					console.error('getVotes', err);
-		
+
 					this.setState({ error: formatServerError(err) });
 				}
 			}
