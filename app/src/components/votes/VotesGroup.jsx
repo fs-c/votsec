@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-import Alert from 'react-bootstrap/Alert';
 import Card from 'react-bootstrap/Card';
 import CardColumns from 'react-bootstrap/CardColumns';
 
@@ -8,7 +7,7 @@ import ErrorMessage from '../ErrorMessage';
 
 import { formatVoteTimes } from '../../helpers';
 
-const PopularVotesGroup = ({ error, votes }) => {
+const VotesGroup = ({ error, votes }) => {
 	return (
 		<React.Fragment>
 			<ErrorMessage error={error}/>
@@ -16,7 +15,7 @@ const PopularVotesGroup = ({ error, votes }) => {
 			{votes && (
 				<CardColumns>
 					{votes.map((vote) => (
-						<PopularVoteItem key={vote._id} {...vote} className='mb-1' />
+						<VotesGroupItem key={vote._id} {...vote} />
 					))}
 				</CardColumns>
 			)}
@@ -24,11 +23,11 @@ const PopularVotesGroup = ({ error, votes }) => {
 	);
 };
 
-const PopularVoteItem = ({ title, startDate, endDate }) => {
+const VotesGroupItem = ({ title, startDate, endDate }) => {
 	return (
 		<Card>
 			<Card.Body>
-				<Card.Title style={{ margin: '0' }}>
+				<Card.Title className='m-0'>
 					<strong>{title}</strong>
 				</Card.Title>
 			</Card.Body>
@@ -39,7 +38,7 @@ const PopularVoteItem = ({ title, startDate, endDate }) => {
 				</small>
 			</Card.Footer>
 		</Card>
-	)
+	);
 };
 
-export default PopularVotesGroup;
+export default VotesGroup;
