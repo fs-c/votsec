@@ -4,14 +4,13 @@ import Container from 'react-bootstrap/Container';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 
 import VotesGroup from '../votes/VotesGroup';
-import VotesList from '../votes/VotesList';
+import FilterableVotesList from '../votes/FilterableVotesList';
 
-import withVotes from '../../withVotes';
+import withVotes from '../votes/withVotes';
 
 export default class Home extends Component {
     render() {
 		const PopularVotesGroup = withVotes({ popular: true })(VotesGroup);
-		const FilterableVotesList = withVotes()(VotesList);
 
         return (
 			<React.Fragment>
