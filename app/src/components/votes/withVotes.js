@@ -7,6 +7,8 @@ import { getDisplayName, buildApiString, formatServerError } from '../../helpers
 export default function withVotes(query = {}, interval = 10000) {
 	return (WrappedComponent) => {
 		class WithVotes extends Component {
+			_isMounted = false;
+
 			constructor(props) {
 				super(props);
 
@@ -14,25 +16,34 @@ export default function withVotes(query = {}, interval = 10000) {
 			}
 
 			async componentDidMount() {
+				this._isMounted = true;
+
 				this.getVotes();
 
 				this.votesTimer = setInterval(() => this.getVotes(), interval);
 			}
 
 			async componentWillUnmount() {
+				this._isMounted = false; // Effectively, anyways
+
 				clearInterval(this.votesTimer);
 			}
 
 			getVotes = async () => {
+				if (this.props.filter)
+					query.title = this.props.filter;				
+
 				try {
 					const uri = buildApiString('votes/get', query);
 					const { data } = await axios.get(uri);
 
-					this.setState({ votes: data, error: null });
+					if (this._isMounted)
+						this.setState({ votes: data, error: null });
 				} catch (err) {
 					console.error('getVotes', err);
 
-					this.setState({ error: formatServerError(err) });
+					if (this._isMounted)
+						this.setState({ error: formatServerError(err) });
 				}
 			}
 
