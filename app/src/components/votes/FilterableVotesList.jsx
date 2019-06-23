@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 
 import VotesList from './VotesList';
 
@@ -11,6 +10,20 @@ import withVotes from './withVotes'
 export default class FilterableVotesList extends Component {
 	constructor(props) {
 		super(props);
+
+		this.state = { searchFilter: '', actualFilter: '' };
+	}
+
+	handleSearchChange = ({ target }) => {
+		this.setState({ searchFilter: target.value });
+
+		this.updateActualFilter();
+	}
+
+	updateActualFilter = () => {
+		console.log('called');
+
+		this.setState((prev) => ({ actualFilter: prev.searchFilter }));
 	}
 
 	render() {
@@ -21,12 +34,12 @@ export default class FilterableVotesList extends Component {
 				<Form className='mb-3'>
 					<Form.Row>
 						<Col>
-							<Form.Control placeholder='Search' />
+							<Form.Control placeholder='Search' value={this.state.searchFilter} onChange={this.handleSearchChange} />
 						</Col>
 					</Form.Row>
 				</Form>
 
-				<EnhancedVotesList />
+				<EnhancedVotesList filter={this.state.actualFilter} />
 			</React.Fragment>
 		)
 	}
