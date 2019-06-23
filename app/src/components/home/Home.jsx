@@ -8,10 +8,10 @@ import FilterableVotesList from '../votes/FilterableVotesList';
 
 import withVotes from '../votes/withVotes';
 
+const PopularVotesGroup = withVotes({ popular: true })(VotesGroup);
+
 export default class Home extends Component {
     render() {
-		const PopularVotesGroup = withVotes({ popular: true })(VotesGroup);
-
         return (
 			<React.Fragment>
 				<Container>

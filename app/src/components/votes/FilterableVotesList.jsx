@@ -7,6 +7,8 @@ import VotesList from './VotesList';
 
 import withVotes from './withVotes'
 
+const EnhancedVotesList = withVotes()(VotesList);
+
 export default class FilterableVotesList extends Component {
 	constructor(props) {
 		super(props);
@@ -17,6 +19,7 @@ export default class FilterableVotesList extends Component {
 	handleSearchChange = ({ target }) => {
 		this.setState({ searchFilter: target.value });
 
+		// TODO: Throttle this function so it doesn't get called too often
 		this.updateActualFilter();
 	}
 
@@ -25,8 +28,6 @@ export default class FilterableVotesList extends Component {
 	}
 
 	render() {
-		const EnhancedVotesList = withVotes()(VotesList);
-
 		return (
 			<React.Fragment>
 				<Form className='mb-3'>
