@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import axios from 'axios';
 
-import { getDisplayName, buildApiString, formatServerError } from './helpers';
+import { getDisplayName, buildApiString, formatServerError } from '../../helpers';
 
 export default function withVotes(query = {}, interval = 10000) {
 	return (WrappedComponent) => {
