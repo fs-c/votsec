@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 
 import axios from 'axios';
 
+import isNil from 'lodash/isNil';
+import omitBy from 'lodash/omitBy';
+
 import { getDisplayName, buildApiString, formatServerError } from '../../helpers';
 
 export default function withVotes(query = {}, interval = 10000) {
@@ -30,11 +33,13 @@ export default function withVotes(query = {}, interval = 10000) {
 			}
 
 			getVotes = async () => {
-				if (this.props.filter)
-					query.title = this.props.filter;				
+				const { popular, filter } = this.props;
+				const actualQuery = omitBy(
+					Object.assign(query, { title: filter, popular }), isNil
+				);
 
 				try {
-					const uri = buildApiString('votes/get', query);
+					const uri = buildApiString('votes/get', actualQuery);
 					const { data } = await axios.get(uri);
 
 					if (this._isMounted)
