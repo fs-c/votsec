@@ -35,7 +35,7 @@ class CustomToggle extends React.Component {
 
 	render() {
 		return (
-			<Button variant='outline-secondary' onClick={this.handleClick}>
+			<Button variant='btn-light' onClick={this.handleClick}>
 				{this.props.children}
 			</Button>
 		);
