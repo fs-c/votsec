@@ -32,6 +32,12 @@ export default function withVotes(query = {}, interval = 10000) {
 				clearInterval(this.votesTimer);
 			}
 
+			async componentDidUpdate(prevProps) {
+				if (prevProps.filter !== this.props.filter) {
+					this.getVotes();
+				}
+			}
+
 			getVotes = async () => {
 				const { popular, filter } = this.props;
 				const actualQuery = omitBy(
