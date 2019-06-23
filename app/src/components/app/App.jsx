@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-import {
-	ImplicitCallback, SecureRoute, Security, withAuth
-} from '@okta/okta-react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { ImplicitCallback, Security, withAuth } from '@okta/okta-react';
 
-import { Container } from 'semantic-ui-react';
+import Container from 'react-bootstrap/Container';
 
 import config from '../../../../config.js';
 
 import Home from '../home/Home';
-import Vote from '../votes/Vote';
-import Navbar from '../navbar/Navbar';
-import Profile from '../profile/Profile';
+import Navigation from '../navigation/Navigation';
 
 const AppContainer = withAuth(class extends Component {
     constructor(props) {
@@ -19,7 +15,6 @@ const AppContainer = withAuth(class extends Component {
 
         this.state = {
 			loggedIn: false, admin: false, user: null, accessToken: undefined,
-			redirectToHome: false,
 		};
 	}
 
@@ -56,47 +51,36 @@ const AppContainer = withAuth(class extends Component {
 	handleLogout = () => {
 		this.props.auth.login('/');
 	}
-	
-	handleVoteDeletion = () => {
-		this.setState({ redirectToHome: true });
-	}
 
     render() {
-		if (this.state.redirectToHome === true) {
-			this.setState({ redirectToHome: false });
-
-			return <Redirect to='/' />
-		}
-
         return (
             <React.Fragment>
-				<Navbar loggedIn={this.state.loggedIn}
+				<Navigation loggedIn={this.state.loggedIn}
 					handleLogin={this.handleLogin}
                     handleLogout={this.handleLogout}
                 />
 
-				<Container text>
+				<Container fluid style={{ marginTop: '1rem' }}>
 					<Route path='/' exact
 						render={(props) => (
 							<Home {...props}
-								showAddVote={this.state.admin}
-								allowVoteEditing={this.state.admin}
 								accessToken={this.state.accessToken}
 							/>
 						)}
 					/>
-
-					{/* TODO: This is a debugging leftover */}
-					<SecureRoute path='/profile' render={(props) => (
-						<Profile {...props} user={this.state.user} />
-					)} />
-
-					<SecureRoute path='/vote/:key' render={(props) => (
-						<Vote {...props} accessToken={this.state.accessToken}
-							handleDeletion={this.handleVoteDeletion}
-						/>
-					)} />
 				</Container>
+
+				<footer className='text-muted pt-4 pb-4 mt-5 bg-light'>
+					<Container>
+						<p>
+							<em>votsec</em>, the voting framework for everyone.
+						</p>
+
+						<p>
+							Take a look at the code on <a href='https://github.com/LW2904/votsec'>GitHub</a>, it's released under the MIT license.
+						</p>
+					</Container>
+				</footer>
 
 				<Route path='/implicit/callback' component={ImplicitCallback} />
             </React.Fragment>
@@ -122,4 +106,4 @@ export default class App extends Component {
     }
 }
 
-export { config }; // For convenience
+export { config };

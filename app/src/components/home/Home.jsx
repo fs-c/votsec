@@ -1,22 +1,28 @@
 import React, { Component } from 'react';
 
-import { Divider } from 'semantic-ui-react';
+import Container from 'react-bootstrap/Container';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 
-import NewestVotesList from '../votes/VoteList';
-import AddNewVote from '../votes/AddNewVote';
+import VotesGroup from '../votes/VotesGroup';
+import FilterableVotesList from '../votes/FilterableVotesList';
+
+import withVotes from '../votes/withVotes';
 
 export default class Home extends Component {
     render() {
+		const PopularVotesGroup = withVotes({ popular: true })(VotesGroup);
+
         return (
 			<React.Fragment>
-                {this.props.showAddVote && (
-					<React.Fragment>
-						<AddNewVote accessToken={this.props.accessToken} />
-						<Divider hidden />
-					</React.Fragment>
-				)}
+				<Container>
+					<Jumbotron className='pb-4 pt-4'>
+						<p className='lead'>Popular Votes</p>
 
-				<NewestVotesList />
+						<PopularVotesGroup />
+					</Jumbotron>
+
+					<FilterableVotesList />
+				</Container>
 			</React.Fragment>
 		);
     }

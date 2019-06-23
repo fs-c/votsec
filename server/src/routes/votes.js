@@ -1,5 +1,14 @@
 const { requireAuth } = require('../auth');
 
+const filterUndefined = (object) => {
+	return Object.keys(object).reduce((acc, cur) => {
+		if (object[cur])
+			acc[cur] = object[cur];
+		
+		return acc;
+	}, {});
+};
+
 module.exports = (fastify, opts, next) => {
 	const voteProperties = {
 		_id: { type: 'string' },
@@ -26,6 +35,8 @@ module.exports = (fastify, opts, next) => {
 				id: { type: 'string' },
 				skip: { type: 'number' },
 				limit: { type: 'number' },
+				title: { type: 'string' },
+				popular: { type: 'boolean' },
 			},
 			response: {
 				'2xx': {
@@ -33,16 +44,23 @@ module.exports = (fastify, opts, next) => {
 					items: { type: 'object', properties: voteProperties },
 				},
 				'4xx': 'genericError#',
-			}
+			},
 		},
 	}, async (request, reply) => {
-		const { id, skip, limit } = request.query;
+		const { id, skip, limit, title } = request.query;
+
+		fastify.log.warn(`title is %o`, typeof title === 'undefined' ? 'undefined' : title);
 
 		if (id)
 			return await fastify.database.votes.get({ _id: id }, { limit: 1 });
 
-		return await fastify.database.votes.get({ hidden: false }, {
-			skip, limit
+		const conditions = filterUndefined({
+			hidden: false,
+			title: title ? new RegExp(`.*${title}.*`, 'g') : undefined,
+		});
+
+		return await fastify.database.votes.get(conditions, {
+			skip, limit,
 		}) || [];
 	});
 
