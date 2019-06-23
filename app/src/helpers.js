@@ -1,6 +1,8 @@
 import moment from 'moment';
 import config from '../../config.js';
 
+import querystring from 'querystring';
+
 export async function checkAuthentication() {
 	const authenticated = await this.props.auth.isAuthenticated();
 
@@ -46,8 +48,8 @@ export function formatVoteTimes(start, end, startLarge = true) {
 }
 
 const { url, port } = config.resourceServer;
-export function buildApiString(path) {
-	return `${url}:${port}/${path}`;
+export function buildApiString(path, query) {
+	return `${url}:${port}/${path}?${querystring.encode(query)}`;
 }
 
 export function getDisplayName(WrappedComponent) {
