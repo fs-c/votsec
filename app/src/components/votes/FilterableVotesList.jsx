@@ -21,8 +21,6 @@ export default class FilterableVotesList extends Component {
 	}
 
 	updateActualFilter = () => {
-		console.log('called');
-
 		this.setState((prev) => ({ actualFilter: prev.searchFilter }));
 	}
 

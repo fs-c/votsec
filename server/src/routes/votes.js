@@ -49,8 +49,6 @@ module.exports = (fastify, opts, next) => {
 	}, async (request, reply) => {
 		const { id, skip, limit, title } = request.query;
 
-		fastify.log.warn(`title is %o`, typeof title === 'undefined' ? 'undefined' : title);
-
 		if (id)
 			return await fastify.database.votes.get({ _id: id }, { limit: 1 });
 
