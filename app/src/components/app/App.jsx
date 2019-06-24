@@ -70,18 +70,6 @@ const AppContainer = withAuth(class extends Component {
 					/>
 				</Container>
 
-				<footer className='text-muted pt-4 pb-4 mt-5 bg-light'>
-					<Container>
-						<p>
-							<em>votsec</em>, the voting framework for everyone.
-						</p>
-
-						<p>
-							Take a look at the code on <a href='https://github.com/LW2904/votsec'>GitHub</a>, it's released under the MIT license.
-						</p>
-					</Container>
-				</footer>
-
 				<Route path='/implicit/callback' component={ImplicitCallback} />
             </React.Fragment>
         );
