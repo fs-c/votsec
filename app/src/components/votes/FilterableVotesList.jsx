@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import debounce from 'lodash/debounce';
+
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form';
 
@@ -14,12 +16,12 @@ export default class FilterableVotesList extends Component {
 		super(props);
 
 		this.state = { searchFilter: '', actualFilter: '' };
+		this.updateActualFilter = debounce(this.updateActualFilter, 200).bind(this);
 	}
 
 	handleSearchChange = ({ target }) => {
 		this.setState({ searchFilter: target.value });
 
-		// TODO: Throttle this function so it doesn't get called too often
 		this.updateActualFilter();
 	}
 
