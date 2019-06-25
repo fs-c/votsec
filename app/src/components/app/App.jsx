@@ -60,7 +60,7 @@ const AppContainer = withAuth(class extends Component {
                     handleLogout={this.handleLogout}
                 />
 
-				<Container fluid style={{ marginTop: '1rem' }}>
+				<Container fluid className='mt-3'>
 					<Route path='/' exact
 						render={(props) => (
 							<Home {...props}
