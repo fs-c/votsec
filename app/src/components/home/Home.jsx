@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 
+import AddVote from '../votes/AddVote';
 import VotesGroup from '../votes/VotesGroup';
 import FilterableVotesList from '../votes/FilterableVotesList';
 
@@ -15,6 +16,8 @@ export default class Home extends Component {
         return (
 			<React.Fragment>
 				<Container>
+					<AddVote />
+
 					<Jumbotron className='pb-4 pt-4'>
 						<p className='lead'>Popular Votes</p>
 

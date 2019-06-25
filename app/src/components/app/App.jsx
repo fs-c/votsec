@@ -9,6 +9,8 @@ import config from '../../../../config.js';
 import Home from '../home/Home';
 import Navigation from '../navigation/Navigation';
 
+const TokenContext = React.createContext(null);
+
 const AppContainer = withAuth(class extends Component {
     constructor(props) {
         super(props);
@@ -54,7 +56,7 @@ const AppContainer = withAuth(class extends Component {
 
     render() {
         return (
-            <React.Fragment>
+            <TokenContext.Provider value={this.state.accessToken}>
 				<Navigation loggedIn={this.state.loggedIn}
 					handleLogin={this.handleLogin}
                     handleLogout={this.handleLogout}
@@ -63,15 +65,13 @@ const AppContainer = withAuth(class extends Component {
 				<Container fluid className='mt-3'>
 					<Route path='/' exact
 						render={(props) => (
-							<Home {...props}
-								accessToken={this.state.accessToken}
-							/>
+							<Home {...props} />
 						)}
 					/>
 				</Container>
 
 				<Route path='/implicit/callback' component={ImplicitCallback} />
-            </React.Fragment>
+            </TokenContext.Provider>
         );
     }
 });
@@ -94,4 +94,4 @@ export default class App extends Component {
     }
 }
 
-export { config };
+export { TokenContext, config };
