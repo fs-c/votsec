@@ -35,7 +35,10 @@ export default class FilterableVotesList extends Component {
 				<Form className='mb-3'>
 					<Form.Row>
 						<Col>
-							<Form.Control placeholder='Search' value={this.state.searchFilter} onChange={this.handleSearchChange} />
+							<Form.Control placeholder='Search all votes'
+								value={this.state.searchFilter}
+								onChange={this.handleSearchChange}
+							/>
 						</Col>
 					</Form.Row>
 				</Form>
