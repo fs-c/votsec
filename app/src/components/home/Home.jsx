@@ -21,7 +21,9 @@ export default class Home extends Component {
 						<PopularVotesGroup />
 					</Jumbotron>
 
-					<FilterableVotesList />
+					<div className='pb-5'>
+						<FilterableVotesList />
+					</div>
 				</Container>
 			</React.Fragment>
 		);
