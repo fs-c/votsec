@@ -67,7 +67,7 @@ module.exports = (fastify, opts, next) => {
 		schema: {
 			body: {
 				type: 'object',
-				required: [ 'title', 'description' ],
+				required: [ 'title' ],
 				properties: voteProperties,
 			},
 			response: {
