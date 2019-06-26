@@ -8,11 +8,11 @@ import Button from 'react-bootstrap/Button';
 
 import ErrorMessage from '../ErrorMessage';
 
-import { TokenContext } from '../app/App';
+import { UserContext } from '../app/App';
 import { buildApiString } from '../../helpers';
 
 const AddVote = ({ show, handleHide }) => {
-	const accessToken = useContext(TokenContext);
+	const { accessToken } = useContext(UserContext);
 
 	const [ error, setError ] = useState(null);
 	const [ voteTitle, setVoteTitle ] = useState('');
