@@ -9,14 +9,18 @@ import config from '../../../../config.js';
 import Home from '../home/Home';
 import Navigation from '../navigation/Navigation';
 
-const TokenContext = React.createContext(null);
+const UserContext = React.createContext({
+	token: null,
+	admin: false,
+	loggedIn: false,
+});
 
 const AppContainer = withAuth(class extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-			loggedIn: false, admin: false, user: null, accessToken: undefined,
+			loggedIn: false, admin: false, accessToken: null,
 		};
 	}
 
@@ -34,12 +38,12 @@ const AppContainer = withAuth(class extends Component {
 
 		// Only execute once the auth status changed
 		if (loggedIn !== this.state.loggedIn) {
-			if (!this.state.user && loggedIn) {
+			if (!this.state.accessToken && loggedIn) {
 				const user = await this.props.auth.getUser();
 				const admin = (user.groups || []).includes('Admin');
 				const accessToken = await this.props.auth.getAccessToken();
 
-				this.setState({ loggedIn, user, admin, accessToken });
+				this.setState({ loggedIn, admin, accessToken });
 			} else {
 				this.setState({ loggedIn });
 			}
@@ -56,9 +60,8 @@ const AppContainer = withAuth(class extends Component {
 
     render() {
         return (
-            <TokenContext.Provider value={this.state.accessToken}>
-				<Navigation loggedIn={this.state.loggedIn}
-					handleLogin={this.handleLogin}
+            <UserContext.Provider value={this.state}>
+				<Navigation handleLogin={this.handleLogin}
                     handleLogout={this.handleLogout}
                 />
 
@@ -71,7 +74,7 @@ const AppContainer = withAuth(class extends Component {
 				</Container>
 
 				<Route path='/implicit/callback' component={ImplicitCallback} />
-            </TokenContext.Provider>
+            </UserContext.Provider>
         );
     }
 });
@@ -94,4 +97,4 @@ export default class App extends Component {
     }
 }
 
-export { TokenContext, config };
+export { UserContext, config };
