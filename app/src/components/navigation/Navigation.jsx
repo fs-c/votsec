@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -7,7 +7,10 @@ import Container from 'react-bootstrap/Container';
 
 import AddVote from '../votes/AddVote';
 
-const Navigation = ({ loggedIn, handleLogin, handleLogout }) => {
+import { UserContext } from '../app/App';
+
+const Navigation = ({ handleLogin, handleLogout }) => {
+	const { loggedIn } = useContext(UserContext);
 	const handler = loggedIn ? handleLogout : handleLogin;
 
 	const [ addingVote, setAddingVote ] = useState(false);
@@ -25,8 +28,12 @@ const Navigation = ({ loggedIn, handleLogin, handleLogout }) => {
 							<Nav.Link disabled>About</Nav.Link>
 
 							{loggedIn && [
-								<Nav.Link key='addVote' onClick={() => setAddingVote(true)}>Add Vote</Nav.Link>,
-								<Nav.Link key='profile' disabled href='/profile'>Profile</Nav.Link>,
+								<Nav.Link key='addVote' onClick={() => setAddingVote(true)}>
+									Add Vote
+								</Nav.Link>,
+								<Nav.Link key='profile' disabled href='/profile'>
+									Profile
+								</Nav.Link>,
 							]}
 						</Nav>
 
