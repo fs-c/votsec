@@ -9,7 +9,7 @@ import { formatVoteTimes } from '../../helpers';
 
 const VotesGroup = ({ error, votes }) => {
 	return (
-		<React.Fragment>
+		<>
 			<ErrorMessage error={error} prefix='Failed to refresh votes: ' />
 
 			{votes && (
@@ -19,7 +19,7 @@ const VotesGroup = ({ error, votes }) => {
 					))}
 				</CardColumns>
 			)}
-		</React.Fragment>
+		</>
 	);
 };
 
