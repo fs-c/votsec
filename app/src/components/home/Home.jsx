@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import Container from 'react-bootstrap/Container';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 
-import AddVote from '../votes/AddVote';
 import VotesGroup from '../votes/VotesGroup';
 import FilterableVotesList from '../votes/FilterableVotesList';
 
@@ -11,24 +10,22 @@ import withVotes from '../votes/withVotes';
 
 const PopularVotesGroup = withVotes({ popular: true })(VotesGroup);
 
-export default class Home extends Component {
-    render() {
-        return (
-			<React.Fragment>
-				<Container>
-					<AddVote />
+const Home = ({ loggedIn }) => {
+	return (
+		<>
+			<Container>
+				<Jumbotron className='pb-4 pt-4'>
+					<p className='lead'>Popular Votes</p>
 
-					<Jumbotron className='pb-4 pt-4'>
-						<p className='lead'>Popular Votes</p>
+					<PopularVotesGroup />
+				</Jumbotron>
 
-						<PopularVotesGroup />
-					</Jumbotron>
+				<div className='pb-5'>
+					<FilterableVotesList />
+				</div>
+			</Container>
+		</>
+	);
+}
 
-					<div className='pb-5'>
-						<FilterableVotesList />
-					</div>
-				</Container>
-			</React.Fragment>
-		);
-    }
-};
+export default Home;
