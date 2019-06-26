@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -8,11 +8,12 @@ import Octicon, { KebabHorizontal } from '@primer/octicons-react';
 
 import ErrorMessage from '../ErrorMessage';
 
+import { UserContext } from '../app/App';
 import { formatVoteTimes } from '../../helpers';
 
 const VotesList = ({ error, votes }) => {
 	return (
-		<React.Fragment>
+		<>
 			<ErrorMessage error={error} prefix='Failed to refresh votes: ' />
 
 			{votes && (
@@ -22,7 +23,7 @@ const VotesList = ({ error, votes }) => {
 					))}
 				</ListGroup>
 			)}
-		</React.Fragment>
+		</>
 	);
 };
 
@@ -43,6 +44,7 @@ class CustomToggle extends React.Component {
 }
 
 const VotesListItem = ({ title, startDate, endDate }) => {
+	const { isAdmin } = useContext(UserContext);
 	const disabled = new Date(endDate) < Date.now();
 
 	return (
@@ -63,10 +65,15 @@ const VotesListItem = ({ title, startDate, endDate }) => {
 					<Dropdown.Menu>
 						<Dropdown.Item>Bookmark</Dropdown.Item>
 						<Dropdown.Item>Share</Dropdown.Item>
-						<Dropdown.Divider />
-						<Dropdown.Header>Danger Zone</Dropdown.Header>
-						<Dropdown.Item>Edit</Dropdown.Item>
-						<Dropdown.Item>Delete</Dropdown.Item>
+
+						{isAdmin && (
+							<>
+								<Dropdown.Divider />
+								<Dropdown.Header>Danger Zone</Dropdown.Header>
+								<Dropdown.Item>Edit</Dropdown.Item>
+								<Dropdown.Item>Delete</Dropdown.Item>
+							</>
+						)}
 					</Dropdown.Menu>
 				</Dropdown>
 			</div>
