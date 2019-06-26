@@ -13,10 +13,8 @@ module.exports = (fastify, opts, next) => {
 	const voteProperties = {
 		_id: { type: 'string' },
 		title: { type: 'string' },
-		description: { type: 'string' },
 		startDate: { type: 'number' },
 		endDate: { type: 'number' },
-		hidden: { type: 'boolean' },
 	};
 
 	fastify.addSchema({
@@ -53,7 +51,6 @@ module.exports = (fastify, opts, next) => {
 			return await fastify.database.votes.get({ _id: id }, { limit: 1 });
 
 		const conditions = filterUndefined({
-			hidden: false,
 			title: title ? new RegExp(`.*${title}.*`, 'g') : undefined,
 		});
 

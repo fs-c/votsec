@@ -4,11 +4,9 @@ const VoteSchema = new mongoose.Schema({
     title: { type: String, index: { unique: true } },
     for: { type: Number, default: 0 },
     against: { type: Number, default: 0 },
-    description: { type: String },
     creationDate: { type: Date, default: () => new Date(Date.now()) },
     startDate: { type: Date, default: () => new Date(Date.now()) },
     endDate: { type: Date, default: () => new Date(Date.now() + 1000 * 60 * 60 * 24 * 7) },
-    hidden: { type: Boolean , default: false },
 });
 
 const Vote = exports.Vote = mongoose.model('Vote', VoteSchema);
