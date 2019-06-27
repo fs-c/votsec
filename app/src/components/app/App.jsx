@@ -10,6 +10,7 @@ import Home from '../home/Home';
 import Navigation from '../navigation/Navigation';
 
 const UserContext = React.createContext({
+	id: null,
 	token: null,
 	admin: false,
 	loggedIn: false,
@@ -43,7 +44,7 @@ const AppContainer = withAuth(class extends Component {
 				const admin = (user.groups || []).includes('Admin');
 				const accessToken = await this.props.auth.getAccessToken();
 
-				this.setState({ loggedIn, admin, accessToken });
+				this.setState({ loggedIn, admin, accessToken, id: user.id });
 			} else {
 				this.setState({ loggedIn });
 			}
