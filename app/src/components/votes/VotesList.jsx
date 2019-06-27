@@ -50,7 +50,7 @@ const VotesListItem = ({ title, startDate, endDate }) => {
 	return (
 		<ListGroup.Item action={!disabled} as='div'>
 			<div className='d-flex w-100 justify-content-between align-items-center'>
-				<div className={disabled && 'text-muted'}>
+				<div className={disabled ? 'text-muted' : ''}>
 					<b>{title}</b><br />
 					<small className='text-muted'>
 						{formatVoteTimes(startDate, endDate)}
