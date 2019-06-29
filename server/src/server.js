@@ -9,6 +9,8 @@ fastify.register(require('fastify-cors'), {
 	origin: true,
 });
 
+fastify.decorateRequest('userId', '');
+
 fastify.register(require('./database').connector);
 
 const prefix = process.env.PREFIX || config.resourceServer.prefix || '/';

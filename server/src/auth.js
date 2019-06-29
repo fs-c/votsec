@@ -43,7 +43,10 @@ const verifyAuth = exports.verifyAuth = async (accessToken, group) => {
 const requireAuth = exports.requireAuth = (fastify, requiredGroup) => {
 	return async (request, reply) => {
 		try {
-			await verifyAuth(getAccessToken(request.headers), requiredGroup);
+			const token = getAccessToken(request.headers);
+			await verifyAuth(token, requiredGroup);
+
+			request.userId = token.claims.id;
 		} catch (err) {
 			fastify.log.trace(err);
 			const status = err.status || 'forbidden';
