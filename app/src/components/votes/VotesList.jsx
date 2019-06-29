@@ -48,7 +48,7 @@ class CustomToggle extends React.Component {
 	}
 }
 
-const VotesListItem = ({ title, startDate, endDate }) => {
+const VotesListItem = ({ _id, title, startDate, endDate }) => {
 	const { loggedIn, admin } = useContext(UserContext);
 	const disabled = new Date(endDate) < Date.now();
 
@@ -91,7 +91,7 @@ const VotesListItem = ({ title, startDate, endDate }) => {
 				</div>
 			</ListGroup.Item>
 
-			<DetailedVote show={showDetails}
+			<DetailedVote voteId={_id} show={showDetails}
 				handleHide={() => setShowDetails(!showDetails)}
 				title={title} startDate={startDate} endDate={endDate}
 			/>
