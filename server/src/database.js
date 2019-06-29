@@ -16,7 +16,8 @@ const connect = require('./database/connect')
  * 		- add(vote)
  *		- delete(id)
  *		- get([options])
- *		- getById(id)
+ *		- for(voteId, userId)
+ *		- against(voteId, userId)
  */
 const votes = require('./database/votes');
 

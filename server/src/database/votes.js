@@ -6,7 +6,8 @@ const VoteSchema = new mongoose.Schema({
     against: { type: Number, default: 0 },
     creationDate: { type: Date, default: () => new Date(Date.now()) },
     startDate: { type: Date, default: () => new Date(Date.now()) },
-    endDate: { type: Date, default: () => new Date(Date.now() + 1000 * 60 * 60 * 24 * 7) },
+	endDate: { type: Date, default: () => new Date(Date.now() + 1000 * 60 * 60 * 24 * 7) },
+	voters: [ String ],
 });
 
 const Vote = exports.Vote = mongoose.model('Vote', VoteSchema);
@@ -26,4 +27,27 @@ const getVotes = exports.get = async (conditions, options) => {
 
 const deleteVote = exports.delete = async (id) => {
 	return await Vote.deleteOne({ _id: id });
+};
+
+const vote = async (yes, voteId, userId) => {
+	const vote = Vote.findOne({ _id: voteId });
+
+	if (!vote)
+		throw new Error('Invalid vote ID');
+
+	if (vote.voters.includes(userId))
+		throw new Error('User already voted');
+
+	vote.for += yes ? 1 : -1;
+	vote.voters.push(userId);
+
+	await vote.save();
+};
+
+const voteFor = exports.for = async (voteId, userId) => {
+	return await vote(true, voteId, userId);
+};
+
+const voteAgainst = exports.against = async (voteId, userId) => {
+	return await vote(false, voteId, userId);
 };

@@ -102,13 +102,25 @@ module.exports = (fastify, opts, next) => {
 			response: {
 				'2xx': { type: 'object', properties: {} },
 				'4xx': 'genericError#',
-			}
+			},
 		},
 	}, async (request, reply) => {
 		fastify.log.info('params: %o', request.params);
 
 		try {
 			return await fastify.database.votes.delete(request.params.id);
+		} catch (err) {
+			reply.badRequest(err.message);
+		}
+	});
+
+	fastify.post('/vote/:id', {
+		preHandler: requireAuth(fastify),
+	}, async (request, reply) => {
+		const func = fastify.database.votes[request.query.for ? 'for' : 'against' ]; 
+
+		try {
+			return await func(request.params.id, request.userId);
 		} catch (err) {
 			reply.badRequest(err.message);
 		}
