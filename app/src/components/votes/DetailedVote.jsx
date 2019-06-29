@@ -4,7 +4,6 @@ import axios from 'axios';
 
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/Button';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -12,12 +11,27 @@ import Col from 'react-bootstrap/Col';
 import ErrorMessage from '../ErrorMessage';
 
 import { UserContext } from '../app/App';
-import { buildApiString, formatVoteTimes } from '../../helpers';
+import { buildApiString, formatVoteTimes, formatServerError } from '../../helpers';
 
-const DetailedVote = ({ show, handleHide, title, startDate, endDate }) => {
+const DetailedVote = ({ show, handleHide, voteId, title, startDate, endDate }) => {
 	const { accessToken } = useContext(UserContext);
 
 	const [ error, setError ] = useState(null);
+
+	const submitVote = async ({ target }) => {	
+		const voteFor = target.id === 'vote-yes';
+
+		try {
+			const query = { for: voteFor };
+			await axios.post(buildApiString(`votes/vote/${voteId}`, query), {}, {
+				headers: { Authorization: `Bearer ${accessToken}` },
+			});
+		} catch (err) {
+			console.error('submitVote', err);
+
+			setError(formatServerError(err));
+		}
+	};
 
 	return (
 		<Modal show={show} onHide={handleHide}>
@@ -34,11 +48,19 @@ const DetailedVote = ({ show, handleHide, title, startDate, endDate }) => {
 
 				<Row>
 					<Col>
-						<Button className='w-100'>Yay</Button>
+						<Button className='w-100' variant='outline-success'
+							onClick={submitVote} id='vote-yes'
+						>
+							Yay
+						</Button>
 					</Col>
 
 					<Col>
-						<Button className='w-100'>Nay</Button>
+						<Button className='w-100' variant='outline-danger'
+							onClick={submitVote} id='vote-no'
+						>
+							Nay
+						</Button>
 					</Col>
 				</Row>
 			</Modal.Body>
