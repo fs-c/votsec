@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 
 import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -6,6 +6,9 @@ import ListGroup from 'react-bootstrap/ListGroup';
 
 import Octicon, { KebabHorizontal } from '@primer/octicons-react';
 
+import './voteList.css';
+
+import DetailedVote from './DetailedVote';
 import ErrorMessage from '../ErrorMessage';
 
 import { UserContext } from '../app/App';
@@ -32,6 +35,8 @@ class CustomToggle extends React.Component {
 		e.preventDefault();
 
 		this.props.onClick(e);
+
+		e.stopPropagation();
 	}
 
 	render() {
@@ -44,40 +49,53 @@ class CustomToggle extends React.Component {
 }
 
 const VotesListItem = ({ title, startDate, endDate }) => {
-	const { isAdmin } = useContext(UserContext);
+	const { loggedIn, admin } = useContext(UserContext);
 	const disabled = new Date(endDate) < Date.now();
 
+	const allowDetails = loggedIn && !disabled;
+	const [ showDetails, setShowDetails ] = useState(false);
+
 	return (
-		<ListGroup.Item action={!disabled} as='div'>
-			<div className='d-flex w-100 justify-content-between align-items-center'>
-				<div className={disabled ? 'text-muted' : ''}>
-					<b>{title}</b><br />
-					<small className='text-muted'>
-						{formatVoteTimes(startDate, endDate)}
-					</small>
+		<>
+			<ListGroup.Item action={allowDetails} as='div'
+				onClick={allowDetails ? () => setShowDetails(true) : () => {}}
+				className={allowDetails ? 'vote-item-hover' : ''}
+			>
+				<div className='d-flex w-100 justify-content-between align-items-center'>
+					<div className={disabled ? 'text-muted' : ''}>
+						<b>{title}</b><br />
+						<small className='text-muted'>
+							{formatVoteTimes(startDate, endDate)}
+						</small>
+					</div>
+
+					<Dropdown>
+						<Dropdown.Toggle as={CustomToggle} id='vote-options-toggle'>
+							<Octicon icon={KebabHorizontal} />
+						</Dropdown.Toggle>
+
+						<Dropdown.Menu>
+							<Dropdown.Item>Bookmark</Dropdown.Item>
+							<Dropdown.Item>Share</Dropdown.Item>
+
+							{admin && (
+								<>
+									<Dropdown.Divider />
+									<Dropdown.Header>Danger Zone</Dropdown.Header>
+									<Dropdown.Item>Edit</Dropdown.Item>
+									<Dropdown.Item>Delete</Dropdown.Item>
+								</>
+							)}
+						</Dropdown.Menu>
+					</Dropdown>
 				</div>
+			</ListGroup.Item>
 
-				<Dropdown>
-					<Dropdown.Toggle as={CustomToggle} id='vote-options-toggle'>
-						<Octicon icon={KebabHorizontal} />
-					</Dropdown.Toggle>
-
-					<Dropdown.Menu>
-						<Dropdown.Item>Bookmark</Dropdown.Item>
-						<Dropdown.Item>Share</Dropdown.Item>
-
-						{isAdmin && (
-							<>
-								<Dropdown.Divider />
-								<Dropdown.Header>Danger Zone</Dropdown.Header>
-								<Dropdown.Item>Edit</Dropdown.Item>
-								<Dropdown.Item>Delete</Dropdown.Item>
-							</>
-						)}
-					</Dropdown.Menu>
-				</Dropdown>
-			</div>
-		</ListGroup.Item>
+			<DetailedVote show={showDetails}
+				handleHide={() => setShowDetails(!showDetails)}
+				title={title} startDate={startDate} endDate={endDate}
+			/>
+		</>
 	);
 };
 
