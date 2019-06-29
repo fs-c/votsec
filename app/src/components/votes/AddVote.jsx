@@ -32,7 +32,7 @@ const AddVote = ({ show, handleHide }) => {
 			setError('Failed to add vote: ' + err.message);
 		}
 	};
-
+	
 	return (
 		<Modal show={show} onHide={handleHide}>
 			<Modal.Header closeButton>
@@ -44,8 +44,8 @@ const AddVote = ({ show, handleHide }) => {
 			<Modal.Body>
 				<Form>
 					<Form.Group>
-						<Form.Control type='text' placeholder='Vivamus malesuada rhoncus lacus, convallis lacinia nulla?'
-							value={voteTitle}
+						<Form.Control type='text' value={voteTitle}
+							placeholder='Should placeholders be forbidden?'
 							onChange={handleTitleChange}
 						/>
 
