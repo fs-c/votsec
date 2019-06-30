@@ -5,11 +5,13 @@ import axios from 'axios';
 import { getDisplayName, buildApiString, formatServerError } from '../../helpers';
 
 // TODO: Rather hacky, maybe replace with a more concise lodash function?
+// 		 Also still allows empty strings, which for now is necessary as
+//		 an actually empty query item wouldn't be updated
 const filterQuery = (query) => {
 	return Object.keys(query).reduce((acc, cur) => {
 		const v = query[cur];
 
-		if (v === '' || v === undefined)
+		if (v === undefined)
 			return acc;
 
 		acc[cur] = v;
