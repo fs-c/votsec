@@ -51,7 +51,7 @@ module.exports = (fastify, opts, next) => {
 			return await fastify.database.votes.get({ _id: id }, { limit: 1 });
 
 		const conditions = filterUndefined({
-			filter: filter ? new RegExp(`.*${filter}.*`, 'g') : undefined,
+			title: filter ? new RegExp(`.*${filter}.*`, 'g') : undefined,
 		});
 
 		return await fastify.database.votes.get(conditions, {
