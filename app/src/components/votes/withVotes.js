@@ -2,12 +2,24 @@ import React, { Component } from 'react';
 
 import axios from 'axios';
 
-import isNil from 'lodash/isNil';
-import omitBy from 'lodash/omitBy';
-
 import { getDisplayName, buildApiString, formatServerError } from '../../helpers';
 
+// TODO: Rather hacky, maybe replace with a more concise lodash function?
+const filterQuery = (query) => {
+	return Object.keys(query).reduce((acc, cur) => {
+		const v = query[cur];
+
+		if (v === '' || v === undefined)
+			return acc;
+
+		acc[cur] = v;
+		return acc;
+	}, {});
+};
+
 export default function withVotes(query = {}, interval = 10000) {
+	const functionQuery = filterQuery(query);
+
 	return (WrappedComponent) => {
 		class WithVotes extends Component {
 			_isMounted = false;
@@ -21,6 +33,7 @@ export default function withVotes(query = {}, interval = 10000) {
 			async componentDidMount() {
 				this._isMounted = true;
 
+				this.getPropQuery();
 				this.getVotes();
 
 				this.votesTimer = setInterval(() => this.getVotes(), interval);
@@ -33,16 +46,21 @@ export default function withVotes(query = {}, interval = 10000) {
 			}
 
 			async componentDidUpdate(prevProps) {
+				this.getPropQuery();
+
 				if (prevProps.filter !== this.props.filter) {
 					this.getVotes();
 				}
 			}
 
-			getVotes = async () => {
+			getPropQuery = () => {
 				const { popular, filter } = this.props;
-				const actualQuery = omitBy(
-					Object.assign(query, { title: filter, popular }), isNil
-				);
+				this.propQuery = filterQuery({ popular, filter });
+			}
+
+			getVotes = async () => {
+				const actualQuery = Object.assign(functionQuery,
+					this.propQuery);
 
 				try {
 					const uri = buildApiString('votes/get', actualQuery);
