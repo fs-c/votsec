@@ -33,7 +33,7 @@ module.exports = (fastify, opts, next) => {
 				id: { type: 'string' },
 				skip: { type: 'number' },
 				limit: { type: 'number' },
-				title: { type: 'string' },
+				filter: { type: 'string' },
 				popular: { type: 'boolean' },
 			},
 			response: {
@@ -45,13 +45,13 @@ module.exports = (fastify, opts, next) => {
 			},
 		},
 	}, async (request, reply) => {
-		const { id, skip, limit, title } = request.query;
+		const { id, skip, limit, filter } = request.query;
 
 		if (id)
 			return await fastify.database.votes.get({ _id: id }, { limit: 1 });
 
 		const conditions = filterUndefined({
-			title: title ? new RegExp(`.*${title}.*`, 'g') : undefined,
+			filter: filter ? new RegExp(`.*${filter}.*`, 'g') : undefined,
 		});
 
 		return await fastify.database.votes.get(conditions, {
