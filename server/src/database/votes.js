@@ -29,11 +29,15 @@ const deleteVote = exports.delete = async (id) => {
 	return await Vote.deleteOne({ _id: id });
 };
 
-const vote = async (yes, voteId, userId) => {
-	const vote = Vote.findOne({ _id: voteId });
+const submitVote = async (yes, voteId, userId) => {
+	const vote = await Vote.findOne({ _id: voteId });
 
 	if (!vote)
 		throw new Error('Invalid vote ID');
+
+	// Legacy support
+	if (!vote.voters)
+		vote.voters = [];
 
 	if (vote.voters.includes(userId))
 		throw new Error('User already voted');
@@ -42,12 +46,14 @@ const vote = async (yes, voteId, userId) => {
 	vote.voters.push(userId);
 
 	await vote.save();
+
+	return {};
 };
 
 const voteFor = exports.for = async (voteId, userId) => {
-	return await vote(true, voteId, userId);
+	return await submitVote(true, voteId, userId);
 };
 
 const voteAgainst = exports.against = async (voteId, userId) => {
-	return await vote(false, voteId, userId);
+	return await submitVote(false, voteId, userId);
 };
