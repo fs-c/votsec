@@ -32,7 +32,7 @@ const AddVote = ({ show, handleHide }) => {
 			setError('Failed to add vote: ' + err.message);
 		}
 	};
-	
+
 	return (
 		<Modal show={show} onHide={handleHide}>
 			<Modal.Header closeButton>
