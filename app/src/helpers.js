@@ -38,18 +38,19 @@ export function formatServerError(err) {
 	return err.message;
 }
 
-export function formatVoteTimes(start, end, startLarge = true) {
+export function formatVoteTimes(start, end, capitalized = true) {
 	const startDate = moment(start).fromNow();
 	const endDate = moment(end).fromNow();
 
 	const timeOver = Date.now() >= new Date(end);
 
-	return `${startLarge ? 'S' : 's'}tarted ${startDate}, ${timeOver ? 'ended' : 'ending'} ${endDate}`;
+	return `${capitalized ? 'S' : 's'}tarted ${startDate}, `
+		+ `${timeOver ? 'ended' : 'ending'} ${endDate}`;
 }
 
 const { url, port } = config.resourceServer;
-export function buildApiString(path, query) {
-	return `${url}:${port}/${path}?${querystring.encode(query)}`;
+export function buildApiString(path, query = {}) {
+	return `${url}:${port}/${path}${query ? `?${querystring.encode(query)}` : ''}`;
 }
 
 export function getDisplayName(WrappedComponent) {
