@@ -38,15 +38,17 @@ const verifyAuth = exports.verifyAuth = async (accessToken, group) => {
 			throw new AuthError('Insufficient permissions', 'forbidden');
 		}
 	}
+
+	return token;
 };
 
 const requireAuth = exports.requireAuth = (fastify, requiredGroup) => {
 	return async (request, reply) => {
 		try {
-			const token = getAccessToken(request.headers);
-			await verifyAuth(token, requiredGroup);
-
-			request.userId = token.claims.id;
+			const token = await verifyAuth(getAccessToken(request.headers),
+				requiredGroup);
+			
+			request.userId = token.claims.uid;
 		} catch (err) {
 			fastify.log.trace(err);
 			const status = err.status || 'forbidden';
