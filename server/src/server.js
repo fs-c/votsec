@@ -1,7 +1,22 @@
 require('dotenv').config();
 const config = require('../../config');
 
-const fastify = require('fastify')({ logger: { level: 'trace' } });
+const inProd = process.env.NODE_ENV === 'production';
+
+const log = exports.log = require('pino')({
+	level: inProd ? 'info' : 'trace',
+	prettyPrint: inProd ? false : {
+		colorize: true, translateTime: true
+	},
+	useLevelLabels: !inProd,
+	redact: inProd ? undefined : { paths: [
+		'req.hostname',
+		'req.remoteAddress',
+		'req.remotePort',
+	], remove: true },
+});
+
+const fastify = require('fastify')({ logger: log });
 
 fastify.register(require('fastify-sensible'));
 fastify.register(require('fastify-cors'), {
