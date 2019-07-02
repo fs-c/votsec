@@ -4,19 +4,23 @@ const config = require('../../config');
 const inProd = exports.inProd = process.env.NODE_ENV === 'production';
 
 const log = exports.log = require('pino')({
-	level: inProd ? 'info' : 'trace',
+	level: inProd ? 'info' : 'debug',
 	prettyPrint: inProd ? false : {
 		colorize: true, translateTime: true
 	},
 	useLevelLabels: !inProd,
 	redact: inProd ? undefined : { paths: [
+		'reqId',
 		'req.hostname',
 		'req.remoteAddress',
 		'req.remotePort',
 	], remove: true },
 });
 
-const fastify = require('fastify')({ logger: log });
+const fastify = require('fastify')({ 
+	logger: log,
+	disableRequestLogging: !inProd,
+});
 
 fastify.register(require('fastify-sensible'));
 fastify.register(require('fastify-cors'), {
@@ -24,12 +28,22 @@ fastify.register(require('fastify-cors'), {
 	origin: true,
 });
 
+if (!inProd) {
+	const { debugHooks } = require('./logging')
+	for (const hook in debugHooks) {
+		fastify.addHook(hook, debugHooks[hook]);
+	}
+}
+
 fastify.decorateRequest('userId', '');
 
 fastify.register(require('./database').connector);
 
 const prefix = process.env.PREFIX || config.resourceServer.prefix || '/';
 fastify.register(require('./routes'), { prefix });
+
+const { errorHandler } = require('./error');
+fastify.setErrorHandler(errorHandler);
 
 const port = process.env.PORT || config.resourceServer.port || 8000;
 
