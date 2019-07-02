@@ -28,11 +28,9 @@ fastify.register(require('fastify-cors'), {
 	origin: true,
 });
 
-if (!inProd) {
-	const { debugHooks } = require('./logging')
-	for (const hook in debugHooks) {
-		fastify.addHook(hook, debugHooks[hook]);
-	}
+const { hooks } = require('./logging')
+for (const hook in hooks) {
+	fastify.addHook(hook, hooks[hook]);
 }
 
 fastify.decorateRequest('userId', '');
