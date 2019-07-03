@@ -1,4 +1,6 @@
 const config = require('../../config');
+
+const { log, inProd } = require('./server');
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 
 const verifier = new OktaJwtVerifier({
@@ -7,55 +9,48 @@ const verifier = new OktaJwtVerifier({
 	assertClaims: config.resourceServer.assertClaims,
 });
 
-class AuthError extends Error {
-	constructor(message, status = 'badRequest') {
-		super(message);
+const { UserError } = require('./error');
 
-		this.status = status;
-	}
-}
-
-const getAccessToken = exports.getAccessToken = (headers) => {
+const extractToken = (headers) => {
 	const match = (headers.authorization || '').match(/Bearer (.+)/);
 
 	if (!match || !match[1]) {
-		throw new AuthError('Malformed or missing authentication header');
+		throw new UserError('Malformed or missing authentication header', 400);
 	}
 
 	return match[1];
 };
 
-const verifyAuth = exports.verifyAuth = async (accessToken, group) => {
-	const token = await verifier.verifyAccessToken(accessToken);
-	const groups = token.claims.grp;
+const verifyGroups = async (token, groups) => {
+	const claimGroups = token.claims.grp.map((grp) => grp.toLowerCase());
 
-	if (group) {
-		if (!groups) {
-			throw new AuthError('Groups required but not found');
+	if (groups) {
+		if (!claimGroups) {
+			throw new UserError('Groups required but not found', 403);
 		}
 
-		if (!groups.includes(group)) {
-			throw new AuthError('Insufficient permissions', 'forbidden');
+		for (const group of groups) {
+			if (!claimGroups.includes(group.toLowerCase())) {
+				throw new UserError('Insufficient permissions', 403);
+			}
 		}
 	}
-
-	return token;
 };
 
-const requireAuth = exports.requireAuth = (fastify, requiredGroup) => {
+const requireAuth = exports.requireAuth = (requiredGroups) => {
 	return async (request, reply) => {
-		try {
-			const token = await verifyAuth(getAccessToken(request.headers),
-				requiredGroup);
-			
-			request.userId = token.claims.uid;
-		} catch (err) {
-			fastify.log.trace(err);
-			const status = err.status || 'forbidden';
+		const rawToken = extractToken(request.headers);
+		const token = await verifier.verifyAccessToken(rawToken)
 
-			reply[status](err.message);
+		if (requiredGroups) {
+			await verifyGroups(token, requiredGroups);
 		}
 
-		return;
+		request.userId = token.claims.uid;
+
+		if (!inProd) {
+			request.token = token;
+			request.rawToken = rawToken;
+		}
 	};
 };
