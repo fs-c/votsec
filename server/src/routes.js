@@ -1,3 +1,5 @@
+const { inProd } = require('./server');
+
 module.exports = (fastify, opts, next) => {
 	const routes = [];
 
@@ -11,6 +13,10 @@ module.exports = (fastify, opts, next) => {
 	});
 
 	fastify.register(require('./routes/votes'), { prefix: '/votes' });
+
+	if (!inProd) {
+		fastify.register(require('./routes/hello'), { prefix: '/hello' });
+	}
 
 	next();
 };
