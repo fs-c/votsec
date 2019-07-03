@@ -60,7 +60,7 @@ module.exports = (fastify, opts, next) => {
 	});
 
 	fastify.post('/add', {
-		preHandler: requireAuth(fastify, 'Admin'),
+		preHandler: requireAuth([ 'admin' ]),
 		schema: {
 			body: {
 				type: 'object',
@@ -91,7 +91,7 @@ module.exports = (fastify, opts, next) => {
 	});
 
 	fastify.delete('/delete/:id', {
-		preHandler: requireAuth(fastify, 'Admin'),
+		preHandler: requireAuth([ 'admin' ]),
 		schema: {
 			params: {
 				type: 'object',
@@ -115,7 +115,7 @@ module.exports = (fastify, opts, next) => {
 	});
 
 	fastify.post('/vote/:id', {
-		preHandler: requireAuth(fastify),
+		preHandler: requireAuth(),
 	}, async (request, reply) => {
 		const func = fastify.database.votes[request.query.for ? 'for' : 'against' ]; 
 
