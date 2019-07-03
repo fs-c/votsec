@@ -4,7 +4,7 @@ const config = require('../../config');
 const inProd = exports.inProd = process.env.NODE_ENV === 'production';
 
 const log = exports.log = require('pino')({
-	level: inProd ? 'info' : 'debug',
+	level: inProd ? 'info' : 'trace',
 	prettyPrint: inProd ? false : {
 		colorize: true, translateTime: true
 	},
@@ -21,6 +21,9 @@ const fastify = require('fastify')({
 	logger: log,
 	disableRequestLogging: !inProd,
 });
+
+const { errorHandler } = require('./error');
+fastify.setErrorHandler(errorHandler);
 
 fastify.register(require('fastify-sensible'));
 fastify.register(require('fastify-cors'), {
@@ -39,9 +42,6 @@ fastify.register(require('./database').connector);
 
 const prefix = process.env.PREFIX || config.resourceServer.prefix || '/';
 fastify.register(require('./routes'), { prefix });
-
-const { errorHandler } = require('./error');
-fastify.setErrorHandler(errorHandler);
 
 const port = process.env.PORT || config.resourceServer.port || 8000;
 
