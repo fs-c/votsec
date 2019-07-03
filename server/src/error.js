@@ -1,25 +1,25 @@
-const { httpErrors } = require('./server');
-
 const CustomError = exports.CustomError = class extends Error {
-	status = 500;
-	userMessage = '';
+	constructor({ userMessage, message, status = 500 }) {
+		super(message);
 
-	constructor(opts) {
-		super(opts.message);
-
-		this.status = opts.status;
-		this.userMessage = opts.userMessage;
+		this.status = status;
+		this.userMessage = userMessage;
 	}
 }
 
-const AuthError = exports.AuthError = class extends CustomError {
-	constructor(userMessage, status = 400) {
-		super({ userMessage, status, message: 'auth error' });
+const UserError = exports.UserError = class extends CustomError {
+	constructor(userMessage, status = 500) {
+		super({ userMessage, status, message: 'User error' });
 	}
 }
 
-const errorHandler = exports.errorHandler = async (err, request, reply) => {
-	reply.log.trace(err);
+const errorHandler = exports.errorHandler = (err, request, reply) => {
+	request.log.trace({
+		message: err.message,
+		stack: err.stack,
+	}, err.message);
+
+	console.log('entered the errorHandler');
 
 	reply.code(err.status || 404).send({
 		success: false,
