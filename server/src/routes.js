@@ -1,22 +1,26 @@
 const { inProd } = require('./server');
+const { UserError } = require('./error');
 
 module.exports = (fastify, opts, next) => {
-	const routes = [];
-
-	fastify.addHook('onRoute', (route) => routes.push({
-		method: route.method,
-		path: route.path,
-	}));
-
-	fastify.get('/', async (request, reply) => {
-		return { message: 'Did you get lost?', routes };
+	fastify.get('/', async (req, res) => {
+		return { message: 'Did you get lost?' };
 	});
 
-	fastify.register(require('./routes/votes'), { prefix: '/votes' });
+	fastify.get('/routes', async (req, res) => {
+		return fastify.printRoutes();
+	});
 
-	if (!inProd) {
-		fastify.register(require('./routes/hello'), { prefix: '/hello' });
-	}
+	fastify.get('/error/route', async (req, res) => {
+		throw new UserError('Error inside route', 400);
+	});
+
+	fastify.get('/error/middleware', {
+		preHandler: async (req, res) => {
+			throw new UserError('Error inside `preHandler` hook', 402);
+		},
+	}, async (req, res) => {
+		return { message: 'You should never see this' };
+	});
 
 	next();
 };
