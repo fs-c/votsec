@@ -1,4 +1,9 @@
 const mongoose = require('mongoose');
+// TODO?: In the spirit of dividing everything into independent chunks, this
+// outside dependecy is not a good idea. The ability to throw errors which 
+// are distinct from potentially dangerous to leak errors is valuable though,
+// and introducing a class which does the same thing in here is just redundant.
+const UserError = require('../error');
 
 // The actual input validation should occur before this, but some sane limits 
 // are still enforced here.
@@ -29,6 +34,10 @@ const get = exports.get = (conditions, options) => {
  * 
  * @returns {Promise<Vote>}
  */
-const add = exports.add = (vote) => {
-	return new Vote(vote).save();
+const add = exports.add = async (vote) => {
+	if (await Vote.find({ title: vote.title })) {
+		throw new UserError('Duplicate vote');
+	}
+
+	return await new Vote(vote).save();
 };
