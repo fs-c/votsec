@@ -29,6 +29,6 @@ const get = exports.get = (conditions, options) => {
  * 
  * @returns {Promise<Vote>}
  */
-const add = exports.add = (vote) => {
+const add = exports.create = (vote) => {
 	return new Vote(vote).save();
 };
