@@ -1,26 +1,34 @@
 const { inProd } = require('./server');
 const { UserError } = require('./error');
 
-module.exports = (fastify, opts, next) => {
-	fastify.get('/', async (req, res) => {
+module.exports = async (fastify, opts) => {
+	fastify.get('/', {
+		'2xx': {
+			type: 'object',
+			properties: { message: { type: 'string' } },
+		},
+	}, async (req, res) => {
 		return { message: 'Did you get lost?' };
 	});
 
-	fastify.get('/routes', async (req, res) => {
-		return fastify.printRoutes();
-	});
+	fastify.register(require('./routes/votes'), { prefix: '/votes' });
 
-	fastify.get('/error/route', async (req, res) => {
-		throw new UserError('Error inside route', 400);
-	});
+	// These are really just here for testing
+	if (!inProd) {
+		fastify.get('/routes', async (req, res) => {
+			return fastify.printRoutes();
+		});
 
-	fastify.get('/error/middleware', {
-		preHandler: async (req, res) => {
-			throw new UserError('Error inside `preHandler` hook', 402);
-		},
-	}, async (req, res) => {
-		return { message: 'You should never see this' };
-	});
-
-	next();
+		fastify.get('/error/route', async (req, res) => {
+			throw new UserError('Error inside route', 400);
+		});
+	
+		fastify.get('/error/middleware', {
+			preHandler: async (req, res) => {
+				throw new UserError('Error inside `preHandler` hook', 402);
+			},
+		}, async (req, res) => {
+			return { message: 'You should never see this' };
+		});
+	}
 };
