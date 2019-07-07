@@ -27,10 +27,14 @@ fastify.register(require('fastify-cors'), {
 	origin: true,
 });
 
+fastify.register(require('./database').connector,
+	config.resourceServer.mongoDB);
+
 fastify.setErrorHandler(async (err, req, res) => {
 	req.log.debug(err);
 
-	const message = err.userMessage || 'Something unexpected happened';
+	const message = err.userMessage || err.validation && 'Validation failed'
+		|| 'Something unexpected happened';
 	const code = (err.statusCode && err.statusCode >= 400) ? err.statusCode : 500;
 
 	res.code(code).send({ success: false, message });
