@@ -89,9 +89,14 @@ module.exports = async (fastify, opts) => {
 	}, async (req, res) => {
 		const vote = (await votes.get({ _id: req.query.id }))[0];
 
+		if (!vote) {
+			throw new UserError('Vote not found');
+		}
+
 		// Legacy support for old votes
-		if (!vote.votes)
+		if (!vote.voters) {
 			vote.voters = [];
+		}
 
 		if (vote.voters.includes(req.user.id)) {
 			throw new UserError('You already participated in this vote');
@@ -106,5 +111,7 @@ module.exports = async (fastify, opts) => {
 		vote.voters.push(req.user.id);
 
 		await vote.save();
+
+		return { message: 'Vote submitted' };
 	});
 };
