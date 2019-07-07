@@ -1,4 +1,5 @@
 const { UserError } = require('../error');
+const { requireAuth } = require('../auth');
 
 const filterUndefined = (object) => {
 	return Object.keys(object).reduce((acc, cur) => {
@@ -53,5 +54,26 @@ module.exports = async (fastify, opts) => {
 		} catch (err) {
 			throw new UserError('Failed getting votes', 400, err.message);
 		}
+	});
+
+	fastify.post('/add', {
+		preHandler: requireAuth(),
+		schema: {
+			body: {
+				type: 'object',
+				required: [ 'title' ],
+				properties: { title: { type: 'string' } },
+			},
+		},
+	}, async (req, res) => {
+		const { title } = req.body;
+
+		const duplicates = await fastify.database.votes.get({ title });
+
+		if (duplicates.length > 0) {
+			throw new UserError('Duplicate vote title', 400);
+		}
+
+		return await fastify.database.votes.add({ title });
 	});
 };
