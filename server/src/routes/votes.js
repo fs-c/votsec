@@ -18,6 +18,8 @@ const voteProperties = {
 };
 
 module.exports = async (fastify, opts) => {
+	const { votes } = fastify.database;
+
 	fastify.get('/get', {
 		schema: {
 			query: {
@@ -43,19 +45,16 @@ module.exports = async (fastify, opts) => {
 
 		try {
 			if (id) {
-				return await fastify.database.votes.get(
-					{ _id: id }, { limit: 1 },
-				);
+				return await votes.get({ _id: id }, { limit: 1 });
 			}
 
-			return await fastify.database.votes.get(
-				conditions, { skip, limit },
-			) || [];
+			return await votes.get(conditions, { skip, limit }) || [];
 		} catch (err) {
 			throw new UserError('Failed getting votes', 400, err.message);
 		}
 	});
 
+	// TODO: PUT?
 	fastify.post('/create', {
 		preHandler: requireAuth(),
 		schema: {
@@ -68,12 +67,44 @@ module.exports = async (fastify, opts) => {
 	}, async (req, res) => {
 		const { title } = req.body;
 
-		const duplicates = await fastify.database.votes.get({ title });
+		const duplicates = await votes.get({ title });
 
 		if (duplicates.length > 0) {
 			throw new UserError('Duplicate vote title', 400);
 		}
 
-		return await fastify.database.votes.create({ title });
+		return await votes.create({ title });
+	});
+
+	// TODO: PATCH? Additionally, implement proper abstraction for vote editing 
+	// like it's being done here.
+	fastify.post('/vote', {
+		preHandler: requireAuth(),
+		schema: {
+			query: {
+				id: { type: 'string' },
+				for: { type: 'boolean' },
+			},
+		},
+	}, async (req, res) => {
+		const vote = (await votes.get({ _id: req.query.id }))[0];
+
+		// Legacy support for old votes
+		if (!vote.votes)
+			vote.voters = [];
+
+		if (vote.voters.includes(req.user.id)) {
+			throw new UserError('You already participated in this vote');
+		}
+
+		if (req.query.for) {
+			vote.for++;
+		} else {
+			vote.against++;
+		}
+
+		vote.voters.push(req.user.id);
+
+		await vote.save();
 	});
 };
