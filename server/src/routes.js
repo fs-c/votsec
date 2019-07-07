@@ -11,24 +11,9 @@ module.exports = async (fastify, opts) => {
 		return { message: 'Did you get lost?' };
 	});
 
-	fastify.register(require('./routes/votes'), { prefix: '/votes' });
+	fastify.register(require('./routes/votes'), { prefix: 'votes' });
 
-	// These are really just here for testing
 	if (!inProd) {
-		fastify.get('/routes', async (req, res) => {
-			return fastify.printRoutes();
-		});
-
-		fastify.get('/error/route', async (req, res) => {
-			throw new UserError('Error inside route', 400);
-		});
-	
-		fastify.get('/error/middleware', {
-			preHandler: async (req, res) => {
-				throw new UserError('Error inside `preHandler` hook', 402);
-			},
-		}, async (req, res) => {
-			return { message: 'You should never see this' };
-		});
+		fastify.register(require('./routes/test'), { prefix: 'test' });
 	}
 };
