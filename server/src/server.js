@@ -21,6 +21,8 @@ const fastify = require('fastify')({
 	logger: log,
 });
 
+fastify.decorateRequest('user', {});
+
 fastify.register(require('fastify-sensible'), { errorHandler: false });
 fastify.register(require('fastify-cors'), {
 	// TODO: Actually implement CORS
