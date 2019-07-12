@@ -1,3 +1,4 @@
+const { UserError } = require('../error');
 const { requireAuth } = require('../auth');
 
 const filterUndefined = (object) => {
@@ -9,23 +10,15 @@ const filterUndefined = (object) => {
 	}, {});
 };
 
-module.exports = (fastify, opts, next) => {
-	const voteProperties = {
-		_id: { type: 'string' },
-		title: { type: 'string' },
-		startDate: { type: 'number' },
-		endDate: { type: 'number' },
-	};
+const voteProperties = {
+	_id: { type: 'string' },
+	title: { type: 'string' },
+	endDate: { type: 'number' },
+	startDate: { type: 'number' },
+};
 
-	fastify.addSchema({
-		$id: 'genericError',
-		type: 'object',
-		properties: {
-			error: { type: 'string' },
-			message: { type: 'string' },
-			statusCode: { type: 'number' },
-		}
-	});
+module.exports = async (fastify, opts) => {
+	const { votes } = fastify.database;
 
 	fastify.get('/get', {
 		schema: {
@@ -41,90 +34,84 @@ module.exports = (fastify, opts, next) => {
 					type: 'array',
 					items: { type: 'object', properties: voteProperties },
 				},
-				'4xx': 'genericError#',
 			},
 		},
-	}, async (request, reply) => {
-		const { id, skip, limit, filter } = request.query;
-
-		if (id)
-			return await fastify.database.votes.get({ _id: id }, { limit: 1 });
+	}, async (req, res) => {
+		const { id, skip, limit, filter, popular } = req.query;
 
 		const conditions = filterUndefined({
 			title: filter ? new RegExp(`.*${filter}.*`, 'g') : undefined,
 		});
 
-		return await fastify.database.votes.get(conditions, {
-			skip, limit,
-		}) || [];
+		try {
+			if (id) {
+				return await votes.get({ _id: id }, { limit: 1 });
+			}
+
+			return await votes.get(conditions, { skip, limit }) || [];
+		} catch (err) {
+			throw new UserError('Failed getting votes', 400, err.message);
+		}
 	});
 
-	fastify.post('/add', {
-		preHandler: requireAuth([ 'admin' ]),
+	// TODO: PUT?
+	fastify.post('/create', {
+		preHandler: requireAuth(),
 		schema: {
 			body: {
 				type: 'object',
 				required: [ 'title' ],
-				properties: voteProperties,
-			},
-			response: {
-				'2xx': {
-					type: 'object',
-					properties: voteProperties,
-				},
-				'4xx': 'genericError#'
+				properties: { title: { type: 'string' } },
 			},
 		},
-	}, async (request, reply) => {
-		try {
-			const duplicates = await fastify.database.votes.get({
-				title: request.body.title
-			});
+	}, async (req, res) => {
+		const { title } = req.body;
 
-			if (duplicates.length > 0)
-				throw new Error('Duplicate title');
+		const duplicates = await votes.get({ title });
 
-			return await fastify.database.votes.add(request.body); 
-		} catch (err) {
-			reply.badRequest(err.message);
+		if (duplicates.length > 0) {
+			throw new UserError('Duplicate vote title', 400);
 		}
+
+		return await votes.create({ title });
 	});
 
-	fastify.delete('/delete/:id', {
-		preHandler: requireAuth([ 'admin' ]),
-		schema: {
-			params: {
-				type: 'object',
-				properties: {
-					par1: { type: 'string' },
-				},
-			},
-			response: {
-				'2xx': { type: 'object', properties: {} },
-				'4xx': 'genericError#',
-			},
-		},
-	}, async (request, reply) => {
-		fastify.log.info('params: %o', request.params);
-
-		try {
-			return await fastify.database.votes.delete(request.params.id);
-		} catch (err) {
-			reply.badRequest(err.message);
-		}
-	});
-
-	fastify.post('/vote/:id', {
+	// TODO: PATCH? Additionally, implement proper abstraction for vote editing 
+	// like it's being done here.
+	fastify.post('/vote', {
 		preHandler: requireAuth(),
-	}, async (request, reply) => {
-		const func = fastify.database.votes[request.query.for ? 'for' : 'against' ]; 
+		schema: {
+			query: {
+				id: { type: 'string' },
+				for: { type: 'boolean' },
+			},
+		},
+	}, async (req, res) => {
+		const vote = (await votes.get({ _id: req.query.id }))[0];
 
-		try {
-			return await func(request.params.id, request.userId);
-		} catch (err) {
-			reply.badRequest(err.message);
+		if (!vote) {
+			throw new UserError('Vote not found');
 		}
-	});
 
-	next();
+		// Legacy support for old votes
+		if (!vote.voters) {
+			vote.voters = [];
+		}
+
+		if (vote.voters.includes(req.user.id)) {
+			throw new UserError('You already participated in this vote');
+		}
+
+		if (req.query.for) {
+			vote.for++;
+		} else {
+			vote.against++;
+		}
+
+		vote.voters.push(req.user.id);
+
+		await vote.save();
+
+		return { message: 'Vote submitted' };
+	});
 };

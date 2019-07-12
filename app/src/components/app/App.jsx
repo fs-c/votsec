@@ -41,7 +41,8 @@ const AppContainer = withAuth(class extends Component {
 		if (loggedIn !== this.state.loggedIn) {
 			if (!this.state.accessToken && loggedIn) {
 				const user = await this.props.auth.getUser();
-				const admin = (user.groups || []).includes('Admin');
+				const admin = (user.groups || []).map((grp) => grp.toLowerCase())
+					.includes('Admin');
 				const accessToken = await this.props.auth.getAccessToken();
 
 				this.setState({ loggedIn, admin, accessToken, id: user.id });
