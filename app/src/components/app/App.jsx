@@ -83,7 +83,7 @@ const AppContainer = withAuth(class extends Component {
 export default class App extends Component {
     render() {
         return (
-            <Router>
+            <Router basename={process.env.PUBLIC_URL}>
                 <Security
                     issuer={config.openID.issuer}
                     client_id={config.openID.client}
