@@ -23,7 +23,7 @@ const AddVote = ({ show, handleHide }) => {
 
 	const handleAddVote = async () => {
 		try {
-			await axios.post(buildApiString('votes/add'), {
+			await axios.post(buildApiString('votes/create'), {
 				title: voteTitle,
 			}, { headers: { Authorization: `Bearer ${accessToken}` } });
 		} catch (err) {

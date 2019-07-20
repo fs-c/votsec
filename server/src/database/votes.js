@@ -1,59 +1,34 @@
 const mongoose = require('mongoose');
 
+// The actual input validation should occur before this, but some sane limits 
+// are still enforced here.
 const VoteSchema = new mongoose.Schema({
-    title: { type: String, index: { unique: true } },
-    for: { type: Number, default: 0 },
-    against: { type: Number, default: 0 },
+    title: { type: String, index: { unique: true }, minlength: 1 },
+    for: { type: Number, default: 0, min: 0},
+    against: { type: Number, default: 0, min: 0 },
     creationDate: { type: Date, default: () => new Date(Date.now()) },
     startDate: { type: Date, default: () => new Date(Date.now()) },
 	endDate: { type: Date, default: () => new Date(Date.now() + 1000 * 60 * 60 * 24 * 7) },
 	voters: [ String ],
 });
 
-const Vote = exports.Vote = mongoose.model('Vote', VoteSchema);
+const Vote = mongoose.model('Vote', VoteSchema);
 
-const addVote = exports.add = async (vote) => {
-	return await new Vote(vote).save();
+/**
+ * @param {object} conditions - passed directly to the driver
+ * @param {object} options - passed directly to the driver
+ * 
+ * @returns {Promise<Vote[]>}
+ */
+const get = exports.get = (conditions, options) => {
+	return Vote.find(conditions, null, options).sort('-startDate');
 };
 
-const getVotes = exports.get = async (conditions, options) => {
-	const opt = Object.assign({
-		skip: 0,
-		limit: undefined,
-	}, options);
-
-	return await Vote.find(conditions, null, opt).sort('-startDate');
-};
-
-const deleteVote = exports.delete = async (id) => {
-	return await Vote.deleteOne({ _id: id });
-};
-
-const submitVote = async (yes, voteId, userId) => {
-	const vote = await Vote.findOne({ _id: voteId });
-
-	if (!vote)
-		throw new Error('Invalid vote ID');
-
-	// Legacy support
-	if (!vote.voters)
-		vote.voters = [];
-
-	if (vote.voters.includes(userId))
-		throw new Error('User already voted');
-
-	vote.for += yes ? 1 : -1;
-	vote.voters.push(userId);
-
-	await vote.save();
-
-	return {};
-};
-
-const voteFor = exports.for = async (voteId, userId) => {
-	return await submitVote(true, voteId, userId);
-};
-
-const voteAgainst = exports.against = async (voteId, userId) => {
-	return await submitVote(false, voteId, userId);
+/**
+ * @param {Vote} vote - the vote to be added
+ * 
+ * @returns {Promise<Vote>}
+ */
+const add = exports.create = (vote) => {
+	return new Vote(vote).save();
 };

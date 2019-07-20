@@ -1,15 +1,14 @@
 const config = require('../../config');
 
-const { log, inProd } = require('./server');
 const OktaJwtVerifier = require('@okta/jwt-verifier');
+
+const { UserError } = require('./error');
 
 const verifier = new OktaJwtVerifier({
 	clientId: config.openID.client,
 	issuer: config.openID.issuer,
 	assertClaims: config.resourceServer.assertClaims,
 });
-
-const { UserError } = require('./error');
 
 const extractToken = (headers) => {
 	const match = (headers.authorization || '').match(/Bearer (.+)/);
@@ -21,18 +20,16 @@ const extractToken = (headers) => {
 	return match[1];
 };
 
-const verifyGroups = async (token, groups) => {
+const verifyGroups = async (token, groups = []) => {
 	const claimGroups = token.claims.grp.map((grp) => grp.toLowerCase());
 
-	if (groups) {
-		if (!claimGroups) {
-			throw new UserError('Groups required but not found', 403);
-		}
+	if (!claimGroups) {
+		throw new UserError('Groups required but not found', 403);
+	}
 
-		for (const group of groups) {
-			if (!claimGroups.includes(group.toLowerCase())) {
-				throw new UserError('Insufficient permissions', 403);
-			}
+	for (const group of groups) {
+		if (!claimGroups.includes(group.toLowerCase())) {
+			throw new UserError('Insufficient permissions', 403);
 		}
 	}
 };
@@ -46,11 +43,8 @@ const requireAuth = exports.requireAuth = (requiredGroups) => {
 			await verifyGroups(token, requiredGroups);
 		}
 
-		request.userId = token.claims.uid;
-
-		if (!inProd) {
-			request.token = token;
-			request.rawToken = rawToken;
-		}
+		request.user.id = token.claims.uid;
+		request.user.token = token;
+		request.user.rawToken = rawToken;
 	};
 };
