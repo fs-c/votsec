@@ -50,7 +50,12 @@ export function formatVoteTimes(start, end, capitalized = true) {
 
 const { url, port } = config.resourceServer;
 export function buildApiString(path, query = {}) {
-	return `${url}:${port}/${path}${query ? `?${querystring.encode(query)}` : ''}`;
+	const parsed = new URL(url + '/' + path);
+	const string = `${parsed.origin}:${port}${parsed.pathname}${query ? `?${querystring.encode(query)}` : ''}`;
+
+	console.log({ string });
+
+	return string;
 }
 
 export function getDisplayName(WrappedComponent) {
