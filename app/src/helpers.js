@@ -56,3 +56,11 @@ export function buildApiString(path, query = {}) {
 export function getDisplayName(WrappedComponent) {
 	return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
+
+export function getBaseName() {
+	const { PUBLIC_URL } = process.env;
+	
+	return PUBLIC_URL ?
+		new URL(PUBLIC_URL).pathname
+	: '/';
+}

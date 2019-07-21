@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { ImplicitCallback, Security, withAuth } from '@okta/okta-react';
 
-import url from 'url';
-
 import Container from 'react-bootstrap/Container';
 
 import config from '../../../../config.js';
 
 import Home from '../home/Home';
 import Navigation from '../navigation/Navigation';
+
+import { getBaseName } from '../../helpers';
 
 const UserContext = React.createContext({
 	id: null,
@@ -84,15 +84,11 @@ const AppContainer = withAuth(class extends Component {
 });
 
 export default class App extends Component {
+	basename = getBaseName();
+
     render() {
-		console.log('public url', process.env.PUBLIC_URL);
-
-		const basename = process.env.PUBLIC_URL ? (
-			new url.Url(process.env.PUBLIC_URL).pathname
-		) : '/';
-
         return (
-            <Router basename={basename}>
+            <Router basename={this.basename}>
                 <Security
                     issuer={config.openID.issuer}
                     client_id={config.openID.client}
