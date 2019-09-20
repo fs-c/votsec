@@ -1,7 +1,7 @@
 const openID = {
-	client: '',
-	issuer: '',
-	redirect: '',
+	client: '<20 (?) alphanumeric characters>',
+	issuer: '<issuer URL>',
+	redirect: '<URL users will be redirected to after auth>',
 	scope: 'openid profile email groups',
 };
 
@@ -9,7 +9,7 @@ const resourceServer = {
 	port: 8090,
 	url: 'http://localhost',
 	mongoDB: {
-		connectString: '',
+		connectString: 'host[:port]/[database][?options]',
 	},
 	assertClaims: {
 		aud: 'api://default',
