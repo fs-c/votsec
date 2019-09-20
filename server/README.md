@@ -13,13 +13,3 @@ In production, you will very likely want to use a process manager like [PM2](htt
 ---
 
 Simplistic resource server acting as an intermediary between frontend and database, authenticating requests. The database related code (located in `src/database/`) is intentially written in a way that allows for easy interchanging of database services.
-
-Debug logging can be enabled by ensuring that `NODE_ENV !== 'production'` and setting the `DEBUG` environment variable. Available scopes are
-
-- `server`, server logic
-- `auth`, authentication logic
-- `database:*`, logs by all database modules. This can further be narrowed down to only the relevant sub-modules, like `database:votes`
-
-Any combination of these scopes is valid, for example `DEBUG=server,database:votes`.
-
-For more information on the notation of DEBUG, take a look at the [debug repository](https://github.com/visionmedia/debug#readme).
