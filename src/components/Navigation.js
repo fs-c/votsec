@@ -33,7 +33,7 @@ const Navigation = () => (
             </Header.Link>
 
             <Header.Link to='/register' router>
-                <Button color='var(--accent-5)'>
+                <Button hero>
                     Join Now
                 </Button>
             </Header.Link>
