@@ -5,17 +5,16 @@ import cn from 'classnames';
 
 import { InvertionContext } from './Container';
 
-const Header = ({ children }) => {
+const Header = ({ children, border }) => {
     const inverted = useContext(InvertionContext);
 
     return (
-        <header className={cn({ inverted })}>
+        <header className={cn({ inverted, border })}>
             {children}
 
             <style jsx>{`
                 header {
                     height: 4em;
-                    border-bottom: 1px solid var(--accent-2);
 
                     display: flex;
                     flex-direction: row;
@@ -24,6 +23,10 @@ const Header = ({ children }) => {
                 header.inverted {
                     color: var(--background);
                     background-color: var(--foreground);
+                }
+
+                header.border {
+                    border-bottom: 1px solid var(--accent-2);
                 }
             `}</style>
         </header>
