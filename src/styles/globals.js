@@ -34,8 +34,9 @@ export default css.global`
         --purple: #F81CE5;
         --violet: #7928CA;
         --cyan: #79FFE1;
+        --cyan-dark: #008B8B; 
 
-        --hero: var(--alert);
+        --hero: var(--cyan-dark);
 
         --page-width: 850px;
 
