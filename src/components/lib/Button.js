@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import cn from 'classnames';
 
-import { InvertionContext } from './Container';
+import { useIsInverted } from './utils';
 
 const Button = ({ children, style, hero }) => {
-    const inverted = useContext(InvertionContext);
+    const inverted = useIsInverted();
 
     return (
         <button style={style} className={cn({ inverted, hero })}>

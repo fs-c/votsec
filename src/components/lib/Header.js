@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Match, Link } from '@reach/router';
 
 import cn from 'classnames';
 
-import { InvertionContext } from './Container';
+import { useIsInverted } from './utils';
 
 const Header = ({ children, border }) => {
-    const inverted = useContext(InvertionContext);
+    const inverted = useIsInverted();
 
     return (
         <header className={cn({ inverted, border })}>
@@ -44,7 +44,7 @@ const HeaderSeperator = () => (
 );
 
 const HeaderLink = ({ children, router, to, main }) => {
-    const inverted = useContext(InvertionContext);
+    const inverted = useIsInverted();
 
     const names = cn({
         'header-link': true,

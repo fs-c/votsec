@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import cn from 'classnames';
 
+import { useIsInverted } from './utils';
 import { breakpoint } from '../../styles/constants';
 
 export const InvertionContext = React.createContext(false);
@@ -10,7 +11,7 @@ const Container = ({ children, flex, inline, fluid, inverted = false,
     filled, center, ...props
 }) => {
     // TODO: Handle this properly
-    const contextInverted = useContext(InvertionContext);
+    const contextInverted = useIsInverted();
     const actualInverted = inverted || contextInverted;
 
     return (
