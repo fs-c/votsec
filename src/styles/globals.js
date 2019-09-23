@@ -35,6 +35,8 @@ export default css.global`
         --violet: #7928CA;
         --cyan: #79FFE1;
 
+        --hero: var(--alert);
+
         --page-width: 850px;
 
         --border-radius: 5px;
