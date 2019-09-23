@@ -4,11 +4,11 @@ import cn from 'classnames';
 
 import { InvertionContext } from './Container';
 
-const Button = ({ children, style }) => {
+const Button = ({ children, style, hero }) => {
     const inverted = useContext(InvertionContext);
 
     return (
-        <button style={style} className={cn({ inverted })}>
+        <button style={style} className={cn({ inverted, hero })}>
             <b>{children}</b>
 
             <style jsx>{`
@@ -26,6 +26,10 @@ const Button = ({ children, style }) => {
 
                     text-align: center;
                     justify-content: center;
+                }
+
+                button.hero {
+                    border: 1px solid var(--hero)!important;
                 }
 
                 button.inverted {
