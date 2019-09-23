@@ -1,6 +1,6 @@
 import React from 'react';
 
-import StepsPane from './StepsPane';
+import Hero from './Hero';
 import Navigation from './Navigation';
 
 import globals from '../styles/globals';
@@ -14,25 +14,11 @@ const App = () => {
 
         <Container inverted inline fluid>
             <Navigation />
+
+            <Hero />
         </Container>
 
         <Spacer large />
-
-        {/* <Container flex inline>
-            <Container flex>
-                <StepsPane />
-            </Container>
-
-            <Container flex>
-                Heya.
-            </Container>
-        </Container> */}
-
-        {/* <Container flex style={{ backgroundColor: 'var(--error)' }}>
-            <Container flex style={{ backgroundColor: 'var(--success)', height: '100vh' }} />
-
-            <Container flex style={{ backgroundColor: 'var(--warning)', height: '100vh' }} />
-        </Container> */}
     </>
 };
 
