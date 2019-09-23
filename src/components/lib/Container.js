@@ -7,7 +7,7 @@ import { breakpoint } from '../../styles/constants';
 export const InvertionContext = React.createContext(false);
 
 const Container = ({ children, flex, inline, fluid, inverted = false,
-    filled, ...props
+    filled, center, ...props
 }) => {
     // TODO: Handle this properly
     const contextInverted = useContext(InvertionContext);
@@ -15,7 +15,10 @@ const Container = ({ children, flex, inline, fluid, inverted = false,
 
     return (
         <InvertionContext.Provider value={actualInverted}>
-            <div className={cn({ flex, inline, filled, inverted: actualInverted }, 'root')} {...props}>
+            <div {...props} className={cn({
+                    flex, inline, filled, center, inverted: actualInverted
+                }, 'root')}
+            >
                 {children}
 
                 <style jsx>{`
@@ -33,6 +36,10 @@ const Container = ({ children, flex, inline, fluid, inverted = false,
                         flex-wrap: wrap;
                     }
 
+                    .root.flex.center {
+                        justify-content: center;
+                    }
+
                     @media (min-width: ${breakpoint.tablet}) {
                         .root.flex {
                             flex-wrap: nowrap;
@@ -41,6 +48,10 @@ const Container = ({ children, flex, inline, fluid, inverted = false,
 
                     .root.inline {
                         padding: 0;
+                    }
+
+                    .root.filled {
+                        background-color: var(--background);
                     }
 
                     .root.filled.inverted {
