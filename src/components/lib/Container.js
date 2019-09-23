@@ -6,13 +6,16 @@ import { breakpoint } from '../../styles/constants';
 
 export const InvertionContext = React.createContext(false);
 
-const Container = ({ children, flex, inline, fluid, inverted = false, ...props }) => {
+const Container = ({ children, flex, inline, fluid, inverted = false,
+    filled, ...props
+}) => {
     // TODO: Handle this properly
     const contextInverted = useContext(InvertionContext);
+    const actualInverted = inverted || contextInverted;
 
     return (
-        <InvertionContext.Provider value={contextInverted || inverted}>
-            <div className={cn({ flex, inline }, 'root')} {...props}>
+        <InvertionContext.Provider value={actualInverted}>
+            <div className={cn({ flex, inline, filled, inverted: actualInverted }, 'root')} {...props}>
                 {children}
 
                 <style jsx>{`
@@ -38,6 +41,10 @@ const Container = ({ children, flex, inline, fluid, inverted = false, ...props }
 
                     .root.inline {
                         padding: 0;
+                    }
+
+                    .root.filled.inverted {
+                        background-color: var(--foreground);
                     }
                 `}</style>
 
