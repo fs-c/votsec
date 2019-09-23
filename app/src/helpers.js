@@ -53,8 +53,6 @@ export function buildApiString(path, query = {}) {
 	const parsed = new URL(url + '/' + path);
 	const string = `${parsed.origin}:${port}${parsed.pathname}${query ? `?${querystring.encode(query)}` : ''}`;
 
-	console.log({ string });
-
 	return string;
 }
 
