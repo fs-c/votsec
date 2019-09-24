@@ -22,6 +22,10 @@ const ListItem = ({ children, muted }) => (
         {children}
 
         <style jsx>{`
+            .list-item {
+                padding: 0.75em;
+            }
+
             .list-item:not(:last-child) {
                 border-bottom: 1px solid var(--accent-3);
             }
