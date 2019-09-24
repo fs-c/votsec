@@ -1,21 +1,133 @@
 import React from 'react';
 
+import { breakpoints } from './lib/styles/constants';
+
+import List from './lib/List';
+import Input from './lib/Input';
+import Button from './lib/Button';
+
+const ExampleAddVote = () => (
+    <List>
+        <List.Item muted>
+            <div className='title'>
+                Create a new vote
+            </div>
+        </List.Item>
+
+        <List.Item>
+            <div className='content'>
+                <div className='input'>
+                    <Input placeholder='Vote title' fluid />
+                </div>
+
+                <div className='button'>
+                    <Button>Add Vote</Button>
+                </div>
+            </div>
+        </List.Item>
+
+        <style jsx>{`
+            .title {
+                font-size: 1.15em;
+                font-weight: bold;
+            }
+
+            .content {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .content .input {
+                flex-grow: 1;
+                margin: 0 0 0.5em 0;
+            }
+
+            @media (min-width: ${breakpoints.mobile}) {
+                .content {
+                    flex-direction: row;
+                }
+
+                .content .input {
+                    margin: 0 0.75em 0 0;
+                }
+            }
+        `}</style>
+    </List>
+);
+
+const ExampleVoteInterestItem = ({ title }) => (
+    <div className='wrapper'>
+        <div className='content'>
+            <div className='title'>
+                {title}
+            </div>
+
+            <div className='button'>
+                <Button>Interested</Button>
+            </div>
+        </div>
+
+        <style jsx>{`
+            .wrapper:not(:last-child) {
+                border-bottom: 1px solid var(--accent-3);
+            }
+
+            .content {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .content .title {
+                flex-grow: 1;
+                margin: 0 0 0.5em 0;
+            }
+
+            @media (min-width: ${breakpoints.mobile}) {
+                .content {
+                    flex-direction: row;
+                }
+
+                .content .title {
+                    margin: 0 0.75em 0 0;
+                    align-self: center;
+                }
+
+                .content .button {
+                    align-self: flex-end;
+                }
+            }
+        `}</style>
+    </div>
+);
+
+const ExampleVoteInterestList = () => (
+    <List>
+        <List.Item>
+            <ExampleVoteInterestItem title='Should votes be forbidden?' />
+        </List.Item>
+
+        <List.Item>
+            <ExampleVoteInterestItem title='Can amendment 5 of document 2847 be considered to be in spiritual compliance with Article II of the constitution?' />            
+        </List.Item>
+    </List>
+);
+
 const StepsPane = () => (
     <div>
         <ul>
             <li>
                 <span className='numbering'>1</span>
                 <span className='content'>
-                    <strong>Create a new vote</strong>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    <strong>Anyone can add a vote</strong>
+                    <ExampleAddVote />
                 </span>
             </li>
 
             <li>
                 <span className='numbering'>2</span>
                 <span className='content'>
-                    Screening Phase: <strong>Users express their <i>interest</i></strong>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    <strong>Others express their interest</strong>
+                    <ExampleVoteInterestList />
                 </span>
             </li>
 
@@ -66,6 +178,7 @@ const StepsPane = () => (
 
 
             li .content {
+                width: 100%;
                 padding: 0 1.5em 1.5em 1.5em;
                 position: relative;
             }
@@ -82,6 +195,7 @@ const StepsPane = () => (
             ul strong {
                 display: block;
                 font-weight: bolder;
+                margin-bottom: 0.5em;
             }
         `}</style>
     </div>
