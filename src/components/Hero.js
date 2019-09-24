@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { DiagonalSeparator, useIsInverted } from './lib/utils';
 import Container from './lib/Container';
+import { DiagonalSeparator, useIsInverted } from './lib/utils';
 
 const Hero = () => {
     const inverted = useIsInverted();
