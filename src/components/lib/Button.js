@@ -19,10 +19,10 @@ const Button = ({ children, style, hero }) => {
 
                     transition: border 0.2s, background 0.2s, color 0.2s ease-out;
 
-                    height: 2.5em;
+                    height: 37px;
                     padding: 0 1em;
                     font-size: 0.825em;
-                    border-radius: 5px;
+                    border-radius: var(--border-radius);
 
                     text-align: center;
                     justify-content: center;
