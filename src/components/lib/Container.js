@@ -3,7 +3,7 @@ import React from 'react';
 import cn from 'classnames';
 
 import { useIsInverted } from './utils';
-import { breakpoint } from '../../styles/constants';
+import { breakpoints } from './styles/constants';
 
 export const InvertionContext = React.createContext(false);
 
@@ -26,6 +26,8 @@ const Container = ({ children, flex, inline, fluid, inverted = false,
                     .root {
                         width: 100%;
 
+                        overflow: hidden;
+
                         padding-right: 15px;
                         padding-left: 15px;
                         margin-right: auto;
@@ -41,7 +43,7 @@ const Container = ({ children, flex, inline, fluid, inverted = false,
                         justify-content: center;
                     }
 
-                    @media (min-width: ${breakpoint.tablet}) {
+                    @media (min-width: ${breakpoints.tablet}) {
                         .root.flex {
                             flex-wrap: nowrap;
                         }
