@@ -8,11 +8,11 @@ export const useIsInverted = () => {
     return useContext(InvertionContext);
 };
 
-export const Spacer = ({ height = 1, small = false, large = false }) => (
-    <div className='root'>
+export const Spacer = ({ size = 1, small = false, large = false, ...props }) => (
+    <div className='root' {...props}>
         <style jsx>{`
             .root {
-                height: ${small ? '0.5em' : large ? '3em' : height + 'em'};
+                height: ${small ? '0.5em' : large ? '3em' : size + 'em'};
             }
         `}</style>
     </div>

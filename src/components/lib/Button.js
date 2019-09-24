@@ -4,11 +4,11 @@ import cn from 'classnames';
 
 import { useIsInverted } from './utils';
 
-const Button = ({ children, style, hero }) => {
+const Button = ({ children, hero, ...props }) => {
     const inverted = useIsInverted();
 
     return (
-        <button style={style} className={cn({ inverted, hero })}>
+        <button className={cn({ inverted, hero })} {...props}>
             <b>{children}</b>
 
             <style jsx>{`

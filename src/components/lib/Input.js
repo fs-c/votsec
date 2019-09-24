@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 
 import cn from 'classnames';
 
-const Input = ({ placeholder, fluid, className }) => {
+const Input = ({ placeholder, fluid, ...props }) => {
     const [ focused, setFocused ] = useState(false);
 
     return (
-        <div className={cn(className, 'wrapper', { focused, fluid })}>
+        <div className={cn('wrapper', { focused, fluid })} {...props}>
             <div className='input-wrapper'>
                 <input placeholder={placeholder}
                     onBlur={() => setFocused(false)}

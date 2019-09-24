@@ -5,11 +5,11 @@ import cn from 'classnames';
 
 import { useIsInverted } from './utils';
 
-const Header = ({ children, border }) => {
+const Header = ({ children, border, ...props }) => {
     const inverted = useIsInverted();
 
     return (
-        <header className={cn({ inverted, border })}>
+        <header className={cn({ inverted, border })} {...props}>
             {children}
 
             <style jsx>{`
@@ -33,8 +33,10 @@ const Header = ({ children, border }) => {
     );
 };
 
-const HeaderSeperator = () => (
-    <div>
+const HeaderSeperator = ({ children, ...props }) => (
+    <div {...props}>
+        {children}
+
         <style jsx>{`
             div {
                 flex-grow: 1;
@@ -43,7 +45,7 @@ const HeaderSeperator = () => (
     </div>
 );
 
-const HeaderLink = ({ children, router, to, main }) => {
+const HeaderLink = ({ children, router, to, main, ...props }) => {
     const inverted = useIsInverted();
 
     const names = cn({
@@ -52,7 +54,7 @@ const HeaderLink = ({ children, router, to, main }) => {
     });
 
     return (
-        <div className={cn({ root: true, inverted })}>
+        <div className={cn({ root: true, inverted })} {...props}>
             {(router && to) ? (
                 <Match path={`${to}/*`}>
                     {({ match }) => (
@@ -94,7 +96,6 @@ const HeaderLink = ({ children, router, to, main }) => {
 
                 .root :global(.header-link-main) {
                     font-weight: bold;
-                    margin-right: 1em;
                     color: var(--foreground);
                 }
 

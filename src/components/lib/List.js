@@ -2,8 +2,8 @@ import React from 'react';
 
 import cn from 'classnames';
 
-const List = ({ children }) => (
-    <div className='list'>
+const List = ({ children, ...props }) => (
+    <div className='list' {...props}>
         {children}
 
         <style jsx>{`
@@ -17,8 +17,8 @@ const List = ({ children }) => (
     </div>
 );
 
-const ListItem = ({ children, muted }) => (
-    <div className={cn('list-item', { muted })}>
+const ListItem = ({ children, muted, ...props }) => (
+    <div className={cn('list-item', { muted })} {...props}>
         {children}
 
         <style jsx>{`

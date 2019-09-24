@@ -7,8 +7,8 @@ import { breakpoints } from './styles/constants';
 
 export const InvertionContext = React.createContext(false);
 
-const Container = ({ children, flex, inline, fluid, inverted = false,
-    filled, center, ...props
+const Container = ({
+    children, flex, inline, fluid, filled, center, inverted = false, ...props
 }) => {
     // TODO: Handle this properly
     const contextInverted = useIsInverted();
