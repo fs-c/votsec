@@ -7,8 +7,8 @@ const Hero = () => {
     const inverted = useIsInverted();
 
     return (<>
-        <Container filled inline fluid flex>
-            <Container flex center>
+        <Container filled fluid>
+            <Container style={{ justifyContent: 'center' }}>
                 <div>
                     <h1>
                         Vote your <span>mind</span>
@@ -17,7 +17,7 @@ const Hero = () => {
             </Container>
         </Container>
 
-        <Container inline fluid flex>
+        <Container fluid row>
             <DiagonalSeparator width={15} height={8} />
             <DiagonalSeparator width={85} height={8} reversed />
         </Container>

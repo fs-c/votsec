@@ -8,68 +8,58 @@ import { breakpoints } from './styles/constants';
 export const InvertionContext = React.createContext(false);
 
 const Container = ({
-    children, flex, inline, fluid, filled, center, inverted = false, ...props
+    children,   /* Get rendered inside the container */
+    row,        /* Makes this container a row, children will be columns */
+    flex,       /* Passed to CSS flex, <flex-grow> <flex-shrink> <flex-basis> */
+    fluid,      /* Sets max-width to 100%, disregarding the page-width variable */
+    filled,     /* Sets an appropiate, invertion respecting, background-color */
+    inverted,   /* Inverts the coloring of itself and child elements */
+    ...props,
 }) => {
-    // TODO: Handle this properly
     const contextInverted = useIsInverted();
+    // TODO: Should an invertion up in the chain invert the child invertion?
     const actualInverted = inverted || contextInverted;
 
     return (
         <InvertionContext.Provider value={actualInverted}>
-            <div {...props} className={cn({
-                    flex, inline, filled, center, inverted: actualInverted
-                }, 'root')}
-            >
+            <div className={cn('container', { filled })} {...props}>
                 {children}
 
                 <style jsx>{`
-                    .root {
+                    .container {
                         width: 100%;
 
                         overflow: hidden;
 
-                        padding-right: 15px;
-                        padding-left: 15px;
                         margin-right: auto;
                         margin-left: auto;
-                    }
 
-                    .root.flex {
                         display: flex;
-                        flex-wrap: wrap;
-                    }
-
-                    .root.flex.center {
-                        justify-content: center;
                     }
 
                     @media (min-width: ${breakpoints.tablet}) {
-                        .root.flex {
-                            flex-wrap: nowrap;
+                        /* TODO: Should this be customisable? */
+                        .container {
+                            flex-direction: column;
                         }
-                    }
-
-                    .root.inline {
-                        padding: 0;
-                    }
-
-                    .root.filled {
-                        background-color: var(--background);
-                    }
-
-                    .root.filled.inverted {
-                        background-color: var(--foreground);
                     }
                 `}</style>
 
                 <style jsx>{`
-                    .root {
-                        max-width: ${fluid ? '100%' : 'var(--page-width)'}
+                    .container {
+                        max-width: ${fluid ? '100%' : 'var(--page-width)'};
+
+                        flex: ${flex};
+                        flex-direction: ${row ? 'row' : 'column'};
+                    }
+
+                    .filled.container {
+                        background-color: var(--${actualInverted ? 'foreground' : 'background'});
                     }
                 `}</style>
             </div>
         </InvertionContext.Provider>
-    )
+    );
 };
 
 export default Container;

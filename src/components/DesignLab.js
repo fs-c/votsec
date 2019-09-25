@@ -4,7 +4,7 @@ import Header from './lib/Header';
 import Container from './lib/Container';
 
 const DesignSection = ({ children, info, ...props }) => (
-    <Container inline fluid style={{
+    <Container fluid style={{
         paddingTop: '0.75em', borderBottom: '1px solid var(--accent-2)',
         backgroundColor: info ? 'var(--accent-1)' : 'inherit',
     }}>
@@ -19,7 +19,7 @@ const DesignSection = ({ children, info, ...props }) => (
 
 const DesignLab = () => (<>
     <Header border>
-        <Container flex>
+        <Container row>
             <Header.Link main to='/' router style={{ borderRight: '1px solid var(--hero)' }}>
                 votsec
             </Header.Link>

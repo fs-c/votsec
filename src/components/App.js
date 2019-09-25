@@ -24,7 +24,7 @@ const App = () => {
 };
 
 const Home = () => (<>
-    <Container inverted inline fluid>
+    <Container inverted fluid>
         <Navigation />
 
         <Hero />
