@@ -4,7 +4,6 @@ import Octicon, { MarkGithub, Beaker } from '@primer/octicons-react'
 
 import Button from './lib/Button';
 import Header from './lib/Header';
-import Container from './lib/Container';
 
 const Navigation = () => (
     <Header style={{ padding: '0 1em 0 1em' }}>
