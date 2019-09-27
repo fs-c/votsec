@@ -1,5 +1,7 @@
 import css from 'styled-jsx/css';
 
+import { pageWidth } from './constants';
+
 export default css.global`
     :root {
         --background: #ffffff;
@@ -38,7 +40,7 @@ export default css.global`
 
         --hero: var(--cyan-dark);
 
-        --page-width: 850px;
+        --page-width: ${pageWidth};
 
         --border-radius: 5px;
     }
