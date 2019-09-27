@@ -3,7 +3,7 @@ import React from 'react';
 import cn from 'classnames';
 
 import { useIsInverted } from './utils';
-import { breakpoints } from './styles/constants';
+import { breakpoints, pageWidth } from './styles/constants';
 
 export const InvertionContext = React.createContext(false);
 
@@ -13,7 +13,10 @@ const Container = ({
     flex,       /* Passed to CSS flex, <flex-grow> <flex-shrink> <flex-basis> */
     fluid,      /* Sets max-width to 100%, disregarding the page-width variable */
     filled,     /* Sets an appropiate, invertion respecting, background-color */
+    padded,     /* Adds padding on the left and right _if on mobile_ */
     inverted,   /* Inverts the coloring of itself and child elements */
+    className,
+    directions = row ? [ 'row', 'row', 'row' ] : [ 'column', 'column', 'column' ],
     ...props,
 }) => {
     const contextInverted = useIsInverted();
@@ -22,7 +25,9 @@ const Container = ({
 
     return (
         <InvertionContext.Provider value={actualInverted}>
-            <div className={cn('container', { filled })} {...props}>
+            <div className={cn('container', className, { filled, padded: padded || !fluid })}
+                {...props}
+            >
                 {children}
 
                 <style jsx>{`
@@ -35,12 +40,22 @@ const Container = ({
                         margin-left: auto;
 
                         display: flex;
+                        flex-direction: ${directions[0]};
                     }
 
-                    @media (min-width: ${breakpoints.tablet}) {
-                        /* TODO: Should this be customisable? */
+                    .padded.container {
+                        padding: 0 1em 0 1em;
+                    }
+
+                    @media (min-width: ${breakpoints.get('tablet')}) {
                         .container {
-                            flex-direction: column;
+                            flex-direction: ${directions[1]};
+                        }
+                    }
+
+                    @media (min-width: ${breakpoints.get('desktop')}) {
+                        .container {
+                            flex-direction: ${directions[2]};
                         }
                     }
                 `}</style>
@@ -49,8 +64,7 @@ const Container = ({
                     .container {
                         max-width: ${fluid ? '100%' : 'var(--page-width)'};
 
-                        flex: ${flex};
-                        flex-direction: ${row ? 'row' : 'column'};
+                        flex: ${flex || 'inherit'};
                     }
 
                     .filled.container {
