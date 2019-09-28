@@ -7,8 +7,8 @@ import Button from './lib/Button';
 import Container from './lib/Container';
 
 const DesignSection = ({ children, info, fluid, ...props }) => (
-    <Container fluid style={{
-        padding: '1em 0 1em 0', borderBottom: '1px solid var(--accent-2)',
+    <Container fluid padding={fluid ? 'py' : '1em'} style={{
+        borderBottom: '1px solid var(--accent-2)',
         backgroundColor: info ? 'var(--accent-1)' : 'inherit',
     }}>
         <Container fluid={fluid} {...props}>
@@ -42,7 +42,7 @@ const DesignPlayground = ({ code }) => (
 
 const DesignLab = () => (<>
     <Header border>
-        <Container row>
+        <Container row padding='px'>
             <Header.Link main to='/' router style={{ borderRight: '1px solid var(--hero)' }}>
                 votsec
             </Header.Link>
@@ -95,6 +95,12 @@ const DesignLab = () => (<>
                 With some exceptions, the container is the only instance that should 
                 make any decisions about the width of elements (itself and its 
                 children). It uses Flexbox by default and can easily be made responsive.
+            </p>
+
+            <p>
+                A padding of <code>1em</code> is applied to the left and right 
+                side respectively when the container is not <code>fluid</code> - 
+                this condition can be overridden with the <code>padded</code> prop. 
             </p>
 
             <p>
@@ -155,7 +161,7 @@ const DesignLab = () => (<>
 
     <DesignSection fluid>
         <Container>
-            <h3>Header</h3>
+            <h3>Header and Button</h3>
 
             <p>
                 <code>Header.Link</code> supports <code>@reach/router</code> links 
@@ -163,7 +169,7 @@ const DesignLab = () => (<>
             </p>
         </Container>
 
-        <DesignPlayground code={`
+        <DesignPlayground code={`<>
 <Container fluid inverted>
     <Header style={{ padding: '0 1em 0 1em' }}>
         <Container row>
@@ -189,6 +195,31 @@ const DesignLab = () => (<>
         </Container>
     </Header>
 </Container>
+
+<Header style={{ padding: '0 1em 0 1em' }}>
+    <Container row>
+        <Header.Link to='/' router main style={{ marginRight: '1em' }}>
+            ACME
+        </Header.Link>
+
+        <Header.Link to='/pricing' router>
+            Pricing
+        </Header.Link>
+
+        <Header.Seperator />
+
+        <Header.Link to='mailto:hello@acme.tld'>
+            Contact
+        </Header.Link>
+
+        <Header.Link to='/about' router>
+            <Button>
+                Sign Up
+            </Button>
+        </Header.Link>
+    </Container>
+</Header>
+</>
         `}/>
     </DesignSection>
 </>);
