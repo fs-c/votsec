@@ -2,7 +2,7 @@ import React from 'react';
 import { Router } from '@reach/router';
 
 import Hero from './Hero';
-import StepsPane from './StepsPane';
+import Workflow from './Workflow';
 import Navigation from './Navigation';
 
 import DesignLab from './DesignLab';
@@ -33,7 +33,7 @@ const Home = () => (<>
     <Spacer large />
 
     <Container>
-        <StepsPane />
+        <Workflow />
     </Container>
 </>);
 
