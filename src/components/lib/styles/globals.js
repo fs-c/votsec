@@ -52,4 +52,8 @@ export default css.global`
         color: var(--foreground);
         background-color: var(--background);
     }
+
+    .p-0 {
+        padding: 0!important;
+    }
 `;
