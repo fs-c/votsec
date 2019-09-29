@@ -2,13 +2,13 @@ import React from 'react';
 
 import cn from 'classnames';
 
-import { useIsInverted } from './utils';
+import { useIsInverted, withHelpers } from './utils';
 
-const Button = ({ children, hero, ...props }) => {
+const Button = withHelpers()(({ children, hero, round, className, ...props }) => {
     const inverted = useIsInverted();
 
     return (
-        <button className={cn({ inverted, hero })} {...props}>
+        <button className={cn(className, { inverted, hero })} {...props}>
             <b>{children}</b>
 
             <style jsx>{`
@@ -22,7 +22,7 @@ const Button = ({ children, hero, ...props }) => {
                     height: 37px;
                     padding: 0 1em;
                     font-size: 0.825em;
-                    border-radius: var(--border-radius);
+                    border-radius: ${round ? '19px' : 'var(--border-radius)'};
 
                     text-align: center;
                     justify-content: center;
@@ -59,6 +59,6 @@ const Button = ({ children, hero, ...props }) => {
             `}</style>
         </button>
     )
-};
+});
 
 export default Button;

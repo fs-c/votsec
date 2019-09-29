@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 
 import cn from 'classnames';
 
-const Input = ({ placeholder, fluid, ...props }) => {
+const Input = withHelpers(({ className, placeholder, fluid, ...props }) => {
     const [ focused, setFocused ] = useState(false);
 
     return (
-        <div className={cn('wrapper', { focused, fluid })} {...props}>
+        <div className={cn('wrapper', className, { focused, fluid })} {...props}>
             <div className='input-wrapper'>
                 <input placeholder={placeholder}
                     onBlur={() => setFocused(false)}
@@ -54,6 +54,6 @@ const Input = ({ placeholder, fluid, ...props }) => {
             `}</style>
         </div>
     );
-};
+});
 
 export default Input;

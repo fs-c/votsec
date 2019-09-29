@@ -2,40 +2,52 @@ import React from 'react';
 
 import cn from 'classnames';
 
-const List = ({ children, ...props }) => (
-    <div className='list' {...props}>
-        {children}
+import { withHelpers, useIsInverted } from './utils'
 
-        <style jsx>{`
-            .list {
-                border-radius: var(--border-radius);
-                border: 1px solid var(--accent-3);
-                /* Since backgrounds would break the border otherwise */
-                overflow: hidden;
-            }
-        `}</style>
-    </div>
-);
+const List = withHelpers()(({ children, className, ...props }) => {
+    const inverted = useIsInverted();
 
-const ListItem = ({ children, muted, ...props }) => (
-    <div className={cn('list-item', { muted })} {...props}>
-        {children}
+    return (
+        <div className={cn('list', className)} {...props}>
+           {children}
 
-        <style jsx>{`
-            .list-item {
-                padding: 0.75em;
-            }
+           <style jsx>{`
+               div {
+                   border-radius: var(--border-radius);
+                   border: 1px solid var(--${inverted ? 'accent-3' : 'foreground'});
+                   color: var(--${inverted ? 'background' : 'foreground'});
+                   /* Since backgrounds would break the border otherwise */
+                   overflow: hidden;
+               }
+           `}</style>
+        </div>
+    );
+});
 
-            .list-item:not(:last-child) {
-                border-bottom: 1px solid var(--accent-3);
-            }
+const ListItem = withHelpers()(({ children, muted, ...props }) => {
+    const inverted = useIsInverted();
+    
+    return (
+        <div className={cn('list-item', { muted })} {...props}>
+            {children}
 
-            .muted {
-                background-color: var(--accent-1);
-            }
-        `}</style>
-    </div>
-);
+            <style jsx>{`
+                .list-item {
+                    padding: 0.75em;
+                    color: var(--${inverted ? 'background' : 'foreground'});
+                }
+
+                .list-item:not(:last-child) {
+                    border-bottom: inherit;
+                }
+
+                .muted {
+                    background-color: var(--accent-1);
+                }
+            `}</style>
+        </div>
+    );
+});
 
 List.Item = ListItem;
 

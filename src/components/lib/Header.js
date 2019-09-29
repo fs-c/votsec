@@ -3,13 +3,13 @@ import { Match, Link } from '@reach/router';
 
 import cn from 'classnames';
 
-import { useIsInverted } from './utils';
+import { withHelpers, useIsInverted } from './utils';
 
-const Header = ({ children, border, ...props }) => {
+const Header = withHelpers()(({ children, className, border, ...props }) => {
     const inverted = useIsInverted();
 
     return (
-        <header className={cn({ inverted, border })} {...props}>
+        <header className={cn(className, { inverted, border })} {...props}>
             {children}
 
             <style jsx>{`
@@ -31,9 +31,9 @@ const Header = ({ children, border, ...props }) => {
             `}</style>
         </header>
     );
-};
+});
 
-const HeaderSeperator = ({ children, ...props }) => (
+const HeaderSeperator = withHelpers()(({ children, ...props }) => (
     <div {...props}>
         {children}
 
@@ -43,9 +43,9 @@ const HeaderSeperator = ({ children, ...props }) => (
             }
         `}</style>
     </div>
-);
+));
 
-const HeaderLink = ({ children, router, to, main, ...props }) => {
+const HeaderLink = withHelpers()(({ children, router, to, main, ...props }) => {
     const inverted = useIsInverted();
 
     const names = cn({
@@ -105,7 +105,7 @@ const HeaderLink = ({ children, router, to, main, ...props }) => {
             `}</style>
         </div>
     );
-};
+});
 
 Header.Link = HeaderLink;
 Header.Seperator = HeaderSeperator;
