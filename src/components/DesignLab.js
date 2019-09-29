@@ -7,11 +7,11 @@ import Button from './lib/Button';
 import Container from './lib/Container';
 
 const DesignSection = ({ children, info, fluid, ...props }) => (
-    <Container fluid padding={fluid ? 'py' : '1em'} style={{
+    <Container fluid style={{
         borderBottom: '1px solid var(--accent-2)',
         backgroundColor: info ? 'var(--accent-1)' : 'inherit',
     }}>
-        <Container fluid={fluid} {...props}>
+        <Container pt='1em' px={fluid ? 0 : '1em'} fluid={fluid} {...props}>
             {children}
         </Container>
     </Container>
@@ -42,7 +42,7 @@ const DesignPlayground = ({ code }) => (
 
 const DesignLab = () => (<>
     <Header border>
-        <Container row padding='px'>
+        <Container row px='1em'>
             <Header.Link main to='/' router style={{ borderRight: '1px solid var(--hero)' }}>
                 votsec
             </Header.Link>
@@ -88,7 +88,7 @@ const DesignLab = () => (<>
     </DesignSection>
 
     <DesignSection fluid>
-        <Container>
+        <Container px='1em'>
             <h3>Container</h3>
 
             <p>
@@ -160,7 +160,7 @@ const DesignLab = () => (<>
     </DesignSection>
 
     <DesignSection fluid>
-        <Container>
+        <Container px='1em'>
             <h3>Header and Button</h3>
 
             <p>
