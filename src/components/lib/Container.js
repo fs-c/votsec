@@ -2,12 +2,12 @@ import React from 'react';
 
 import cn from 'classnames';
 
-import { useIsInverted } from './utils';
 import { breakpoints } from './styles/constants';
+import { useIsInverted, withHelpers } from './utils';
 
 export const InvertionContext = React.createContext(false);
 
-const Container = ({
+const Container = withHelpers()(({
     children,   /* Get rendered inside the container */
     row,        /* Makes this container a row, children will be columns */
     flex,       /* Passed to CSS flex, <flex-grow> <flex-shrink> <flex-basis> */
@@ -15,7 +15,6 @@ const Container = ({
     filled,     /* Sets an appropiate, invertion respecting, background-color */
     inverted,   /* Inverts the coloring of itself and child elements */
     className,
-    padding = 'px',
     directions = row ? [ 'row', 'row', 'row' ] : [ 'column', 'column', 'column' ],
     ...props,
 }) => {
@@ -25,7 +24,7 @@ const Container = ({
 
     return (
         <InvertionContext.Provider value={actualInverted}>
-            <div className={cn('container', className, padding, { filled })}
+            <div className={cn('container', className, { filled })}
                 {...props}
             >
                 {children}
@@ -41,14 +40,6 @@ const Container = ({
 
                         display: flex;
                     }
-
-                    .container.px {
-                        padding: 0 1em 0 1em;
-                    }
-
-                    .container.py {
-                        padding: 1em 0 1em 0;
-                    }
                 `}</style>
 
                 <style jsx>{`
@@ -57,8 +48,6 @@ const Container = ({
 
                         flex: ${flex || 'inherit'};
                         flex-direction: ${directions[0]};
-
-                        padding: ${padding};
                     }
 
                     @media (min-width: ${breakpoints.get('tablet')}) {
@@ -80,6 +69,21 @@ const Container = ({
             </div>
         </InvertionContext.Provider>
     );
-};
+});
+
+const Box = withHelpers()(({ children, className, ...props }) => (
+    <div className={cn('box', className)} {...props}>
+        {children}
+
+        <style jsx>{`
+            .box {
+                width: auto;
+                overflow: hidden;
+            }
+        `}</style>
+    </div>
+));
+
+Container.Box = Box;
 
 export default Container;
