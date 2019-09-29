@@ -1,11 +1,71 @@
 import React, { useContext } from 'react';
 
 import cn from 'classnames';
+import css from 'styled-jsx/css'
 
+import { getDisplayName } from '../../helpers';
 import { InvertionContext } from './Container';
 
 export const useIsInverted = () => {
     return useContext(InvertionContext);
+};
+
+export const withHelpers = () => {
+    return (WrappedComponent) => {
+        const WithHelpers = ({
+            children,
+            h, w,
+            align, justify,
+            m, mx, my, mt, mr, mb, ml,
+            p, px, py, pt, pr, pb, pl,
+            ...props,
+        }) => {
+            const hasFlex = align || justify;
+            const hasWidth = w;
+            const hasHeight = h;
+            const hasMargin = m || mx || my || mt || mr || mb || ml;
+            const hasPadding = p || px || py || pt || pr || pb || pl;
+
+            const flexStyle = css.resolve`
+                align-items: ${align || 'stretch'};
+                justify-content: ${justify || 'flex-start'};
+            `;
+
+            const widthStyle = css.resolve`width: ${w || 'auto'}!important;`;
+            const heightStyle = css.resolve`height: ${h || 'auto'}!important;`;
+
+            const marginStyle = css.resolve`
+                margin: ${m ? m : `${mt || my || '0'} ${mr || mx || '0'} `
+                    + `${mb || my || '0'} ${ml || mx || '0'}`};                
+            `;
+            const paddingStyle = css.resolve`
+                padding: ${p ? p : `${pt || py || '0'} ${pr || px || '0'} `
+                    + `${pb || py || '0'} ${pl || px || '0'}`};                
+            `;
+
+            return (
+                <WrappedComponent className={cn({
+                    [flexStyle.className]: hasFlex,
+                    [widthStyle.className]: hasWidth,
+                    [heightStyle.className]: hasHeight,
+                    [marginStyle.className]: hasMargin,
+                    [paddingStyle.className]: hasPadding
+                })} {...props}>
+                    {children}
+
+                    {flexStyle.styles}
+                    {widthStyle.styles}
+                    {heightStyle.styles}
+                    {marginStyle.styles}
+                    {paddingStyle.styles}
+                </WrappedComponent>
+            );
+        };
+
+        WithHelpers.displayName = `WithHelpers(${getDisplayName(WrappedComponent)})`;
+
+        return WithHelpers;
+    };
 };
 
 export const Spacer = ({ size = 1, small = false, large = false, ...props }) => (
