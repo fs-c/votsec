@@ -8,33 +8,33 @@ const Button = withHelpers()(({ children, hero, round, className, ...props }) =>
     const inverted = useIsInverted();
 
     return (
-        <button className={cn(className, { inverted, hero })} {...props}>
+        <button className={cn(className, { inverted, round, hero })} {...props}>
             <b>{children}</b>
 
             <style jsx>{`
                 button {
-                    color: var(--accent-5);
+                    color: var(--accent-${
+                        inverted ? '3' : '5'
+                    });
                     background: inherit;
-                    border: 1px solid var(--foreground);
+                    border: 1px solid var(--${
+                        hero ? 'hero' : inverted ? 'background' : 'foreground'
+                    })${hero ? '!important' : ''};
 
                     transition: border 0.2s, background 0.2s, color 0.2s ease-out;
 
                     height: 37px;
                     padding: 0 1em;
                     font-size: 0.825em;
-                    border-radius: ${round ? '19px' : 'var(--border-radius)'};
+                    border-radius: var(--border-radius);
 
                     text-align: center;
                     justify-content: center;
                 }
-
-                button.hero {
-                    border: 1px solid var(--hero)!important;
-                }
-
-                button.inverted {
-                    color: var(--accent-3);
-                    border: 1px solid var(--background);
+                
+                button.round {
+                    width: 37px;
+                    border-radius: 19px;
                 }
 
                 button b {
