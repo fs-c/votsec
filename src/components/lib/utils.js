@@ -18,29 +18,33 @@ export const withHelpers = () => {
             align, justify,
             m, mx, my, mt, mr, mb, ml,
             p, px, py, pt, pr, pb, pl,
+            border,
             ...props,
         }) => {
             const hasFlex = align || justify;
             const hasWidth = w;
             const hasHeight = h;
+            const hasBorder = border;
             const hasMargin = m || mx || my || mt || mr || mb || ml;
             const hasPadding = p || px || py || pt || pr || pb || pl;
 
             const flexStyle = css.resolve`
-                align-items: ${align || 'stretch'};
-                justify-content: ${justify || 'flex-start'};
+                align-items: ${align || 'stretch'}!important;
+                justify-content: ${justify || 'flex-start'}!important;
             `;
 
             const widthStyle = css.resolve`width: ${w || 'auto'}!important;`;
             const heightStyle = css.resolve`height: ${h || 'auto'}!important;`;
 
+            const borderStyle = css.resolve`border: ${border}!important`;
+
             const marginStyle = css.resolve`
                 margin: ${m ? m : `${mt || my || '0'} ${mr || mx || '0'} `
-                    + `${mb || my || '0'} ${ml || mx || '0'}`};                
+                    + `${mb || my || '0'} ${ml || mx || '0'}`}!important;
             `;
             const paddingStyle = css.resolve`
                 padding: ${p ? p : `${pt || py || '0'} ${pr || px || '0'} `
-                    + `${pb || py || '0'} ${pl || px || '0'}`};                
+                    + `${pb || py || '0'} ${pl || px || '0'}`}!important;
             `;
 
             return (
@@ -48,6 +52,7 @@ export const withHelpers = () => {
                     [flexStyle.className]: hasFlex,
                     [widthStyle.className]: hasWidth,
                     [heightStyle.className]: hasHeight,
+                    [borderStyle.className]: hasBorder,
                     [marginStyle.className]: hasMargin,
                     [paddingStyle.className]: hasPadding
                 })} {...props}>
@@ -56,6 +61,7 @@ export const withHelpers = () => {
                     {flexStyle.styles}
                     {widthStyle.styles}
                     {heightStyle.styles}
+                    {borderStyle.styles}
                     {marginStyle.styles}
                     {paddingStyle.styles}
                 </WrappedComponent>
