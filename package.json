@@ -6,6 +6,7 @@
     "@emotion/core": "^10.0.17",
     "@mdx-js/react": "^1.5.0",
     "@primer/octicons-react": "^9.1.1",
+    "@reach/router": "^1.2.1",
     "@sturmwalzer/react-scripts": "^3.3.0",
     "bootstrap": "^4.3.1",
     "react": "^16.10.1",
