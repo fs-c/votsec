@@ -1,41 +1,28 @@
 import React from 'react';
-import { Match, Link } from '@reach/router';
 
-import { Flex, Box } from 'reflexbox';
+import { Container } from './lib/utils';
 import Octicon, { Beaker, MarkGithub } from '@primer/octicons-react';
+import { Navbar, Button, Divider, Colors, Alignment } from '@blueprintjs/core';
 
-const NavigationLink = ({ children, to }) => (
-    <Box>
-        <Match path={`${to}/*`}>
-            {({ match }) => (
-                <Link to={to}>
-                    {children}
-                </Link>
-            )}
-        </Match>
-    </Box>
-);
+const Navigation = (props) => (
+    <Navbar style={{ backgroundColor: Colors.BLACK }} {...props}>
+        <Container>
+            <Navbar.Group align={Alignment.LEFT}>
+                <Navbar.Heading>
+                    <Button minimal text='votsec' />
+                </Navbar.Heading>
+                <Divider />
+                <Button minimal icon={<Octicon icon={Beaker} />} />
+                <Button minimal icon={<Octicon icon={MarkGithub} />} />
+            </Navbar.Group>
 
-const Navigation = () => (
-    <Flex justifyContent='space-between' fontFamily='body' p={3}>
-        <Flex>
-            <Box sx={{
-                ':hover': {
-                    color: 'primary',
-                }
-            }}>
-                <b>votsec</b>
-            </Box>
-
-            <Box ml={3}>
-                <Octicon icon={MarkGithub} />
-            </Box>
-
-            <Box ml={2}>
-                <Octicon icon={Beaker} />
-            </Box>
-        </Flex>
-    </Flex>
+            <Navbar.Group align={Alignment.RIGHT}>
+                <Button minimal text='Login' />
+                <Divider />
+                <Button text='Join Now' intent='primary' />
+            </Navbar.Group>
+        </Container>
+    </Navbar>
 );
 
 export default Navigation;
