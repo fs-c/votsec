@@ -8,7 +8,7 @@
     "@mdx-js/react": "^1.5.0",
     "@primer/octicons-react": "^9.1.1",
     "@reach/router": "^1.2.1",
-    "@sturmwalzer/react-scripts": "^3.3.0",
+    "@sturmwalzer/react-scripts": "^3.3.1",
     "bootstrap": "^4.3.1",
     "classnames": "^2.2.6",
     "react": "^16.10.1",
