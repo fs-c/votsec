@@ -1,0 +1,19 @@
+{
+    "version": 2,
+    "name": "votsec",
+    "builds": [
+        {
+            "src": "./app/build/**",
+            "use": "@now/static"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "app/build/$1"
+        }
+    ],
+    "github": {
+        "silent": true
+    }
+}
